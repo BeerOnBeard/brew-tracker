@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        background: black;
+      }
+      .container {
+        margin: auto;
+        max-width: 1025px;
+        background: white;
+        padding: 1rem;
+      }
+      .actions {
+        margin-bottom: 2rem;
+      }
+      .actions > div {
+        margin-bottom: 1rem;
+      }
+      .actions textarea {
+        width: 100%;
+      }
+    </style>
+    <script type="text/javascript" src="moment.js"></script>
+    <script type="text/javascript" src="moment-js-timezone.js"></script>
+    <script type="text/javascript" src="vue.js"></script>
+  </head>
+  <body>
+    <div id="root" class="container">
+      <h1>{{ brew.name }}</h1>
+      <div class="actions">
+        <div>
+          <div>Brew Note</div>
+          <textarea v-model="brewNote"></textarea>
+          <button @click="addBrewNote">Add</button>
+        </div>
+        <div>
+          <div>Fermentation Note</div>
+          <textarea type="text" v-model="fermentationNote"></textarea>
+          <button @click="addFermentationNote">Add</button>
+        </div>
+        <div>
+          <div>Tasting Note</div>
+          <textarea type="text" v-model="tastingNote"></textarea>
+          <button @click="addTastingNote">Add</button>
+        </div>
+      </div>
+      <div>
+        <h2>Recipe</h2>
+        <div>Yeast: {{ brew.yeast }}</div>
+        <div>Target original gravity: {{ brew.targetOriginalGravity }}</div>
+        <div>Target final gravity: {{ brew.targetFinalGravity }}</div>
+        <div>Fermentation temperature: {{ brew.fermentationTemperature }}&deg;C</div>
+        <div>
+          <h3>Mash</h3>
+          <div v-for="malt in brew.recipe.mash.malts">{{ malt }}</div>
+          <div>Starting volume: {{ brew.recipe.mash.startingVolume }} liters</div>
+          <div>Sparge volume: {{ brew.recipe.mash.spargeVolume }} liters</div>
+          <div>Target final volume: {{ brew.recipe.mash.targetFinalVolume }} liters</div>
+          <div>Mash temperature: {{ brew.recipe.mash.temperature }}&deg;C</div>
+          <div>Mash-out temperature: {{ brew.recipe.mash.mashOutTemperature }}&deg;C</div>
+        </div>
+        <div>
+          <h3>Hops</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Amount</th>
+                <th>Name</th>
+                <th>%AA</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="hop in brew.recipe.hops">
+                <td>{{ hop.amount }}g</td>
+                <td>{{ hop.name }}</td>
+                <td>{{ hop.alphaAcids }}</td>
+                <td>{{ hop.time }} minutes</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div>
+          <h2>Brew Notes</h2>
+          <div v-for="note in brew.brewNotes">
+            <h3>{{ note.time | formatTime }}</h3>
+            <div>{{ note.note }}</div>
+          </div>
+        </div>
+        <div>
+          <h2>Fermentation Notes</h2>
+          <div v-for="note in brew.fermentationNotes">
+            <h3>{{ note.time | formatTime }}</h3>
+            <div>{{ note.note }}</div>
+          </div>
+        </div>
+        <div>
+          <h2>Tasting Notes</h2>
+          <div v-for="note in brew.tastingNotes">
+            <h3>{{ note.time | formatTime }}</h3>
+            <div>{{ note.note }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      /* NOTE: temperature in celsius, volume in liters, weight in grams */
+      let model = {
+        brewNote: '',
+        fermentationNote: '',
+        tastingNote: '',
+        brew: {
+          name: 'First Pale Ale',
+          yeast: 'SafAle US-05',
+          targetOriginalGravity: 1.047,
+          targetFinalGravity: 1.009,
+          fermentationTemperature: 21,
+          recipe: {
+            mash: {
+              malts: [
+                '9 lbs 2-row',
+                '1 lb Crystal 10L'
+              ],
+              startingVolume: 26.5,
+              spargeVolume: 1.5,
+              targetFinalVolume: 21,
+              temperature: 65,
+              mashOutTemperature: 77
+            },
+            hops: [
+              { amount: 7, name: 'Nugget pellets', alphaAcids: 15, time: 60 },
+              { amount: 7, name: 'Nugget pellets', alphaAcids: 15, time: 20 },
+              { amount: 57, name: 'Cascade pellets', alphaAcids: 7.6, time: 10 },
+              { amount: 57, name: 'Cascade pellets', alphaAcids: 7.6, time: 0 }
+            ]
+          },
+          brewNotes: [
+            { time: '2020-01-18T12:00:00-05:00', note: 'Started 7 gallons' },
+            { time: '2020-01-18T13:00:00-05:00', note: 'Reached mash temp. Starting mash.' }
+          ],
+          fermentationNotes: [
+            { time: '2020-01-20T12:00:00-05:00', note: 'Airlock is bubbling' },
+            { time: '2020-01-21T13:00:00-05:00', note: 'Airlock stopped bubbling' }
+          ],
+          tastingNotes: [
+            { time: '2020-02-10T13:00:00-05:00', note: 'Slight banana smell' },
+            { time: '2020-02-10T17:00:00-05:00', note: 'Banana smell is gone' }
+          ]
+        }
+      }
+
+      Vue.filter('formatTime', function (value) {
+        return moment(value).format('YYYY-MM-DD [@] HH:mm:ss');
+      });
+
+      var app = new Vue({
+        el: '#root',
+        data: model,
+        methods: {
+          addBrewNote() {
+            this.brew.brewNotes.push({ time: moment().format(), note: this.brewNote });
+            this.brewNote = '';
+          },
+          addFermentationNote() {
+            this.brew.fermentationNotes.push({ time: moment().format(), note: this.fermentationNote });
+            this.fermentationNote = '';
+          },
+          addTastingNote() {
+            this.brew.tastingNotes.push({ time: moment().format(), note: this.tastingNote });
+            this.tastingNote = '';
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
