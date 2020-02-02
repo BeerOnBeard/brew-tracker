@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
       html, body {
         margin: 0;
@@ -21,9 +22,11 @@
       label {
         display: block;
         margin-bottom: 1rem;
+        margin-right: 0.5rem;
       }
       input {
         line-height: 2rem;
+        display: block;
       }
       .fermentables {
         margin-bottom: 1rem;
@@ -33,12 +36,22 @@
         color: green;
         cursor: pointer;
       }
-      .fermentables > input {
-        display: block;
-      }
       .hops__add {
         color: green;
         cursor: pointer;
+      }
+      .hop {
+        border: 1px solid black;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .hop__remove {
+        background: red;
+        color: white;
+        height: 2rem;
       }
     </style>
     <script type="text/javascript" src="vue.js"></script>
@@ -46,66 +59,65 @@
   <body>
     <div id="root" class="container">
       <h1>New Brew</h1>
-      <form>
-        <label>
-          Name: <input type="text" />
-        </label>
-        <label>
-          Yeast: <input type="text" />
-        </label>
-        <label>
-          Target original gravity: <input type="number" />
-        </label>
-        <label>
-          Target final gravity: <input type="number" />
-        </label>
-        <label>
-          Fermentation temperature (&deg;C): <input type="number" />
-        </label>
+      <label>
+        Name <input type="text" />
+      </label>
+      <label>
+        Yeast <input type="text" />
+      </label>
+      <label>
+        Target original gravity <input type="number" />
+      </label>
+      <label>
+        Target final gravity <input type="number" />
+      </label>
+      <label>
+        Fermentation temperature (&deg;C) <input type="number" />
+      </label>
+      
+      <h2>Mash</h2>
+      <div class="fermentables">
+        <h3>Fermentables <span class="fermentables__add" @click="addFermentable">+</span></h3>
+        <input type="text" v-for="(_, i) in recipe.mash.fermentables" v-model="recipe.mash.fermentables[i]" />
+      </div>
+      <label>
+        Starting volume (liters) <input type="number" />
+      </label>
+      <label>
+        Sparge volume (liters) <input type="number" />
+      </label>
+      <label>
+        Target final volume (liters) <input type="number" />
+      </label>
+      <label>
+        Mash temperature (&deg;C) <input type="number" />
+      </label>
+      <label>
+        Mash-out temperature (&deg;C) <input type="number" />
+      </label>
 
-        <h2>Mash</h2>
-        <div class="fermentables">
-          <h3>Fermentables <span class="fermentables__add" @click="addFermentable">+</span></h3>
-          <input type="text" v-for="(_, i) in recipe.mash.fermentables" v-model="recipe.mash.fermentables[i]" />
+      <div class="hops">
+        <h2>Hops <span class="hops__add" @click="addHop">+</span></h2>
+        <div class="hop" v-for="(_, i) in recipe.hops">
+          <label>
+            Amount in Grams
+            <input type="number" v-model="recipe.hops[i].amount" />
+          </label>
+          <label>
+            Name
+            <input type="text" v-model="recipe.hops[i].name" />
+          </label>
+          <label>
+            %AA
+            <input type="number" v-model="recipe.hops[i].alphaAcids" />
+          </label>
+          <label>
+            Time in Minutes
+            <input type="number" v-model="recipe.hops[i].time" />
+          </label>
+          <button class="hop__remove" @click="removeHop(i)">Remove</button>
         </div>
-        <label>
-          Starting volume (liters): <input type="number" />
-        </label>
-        <label>
-          Sparge volume (liters): <input type="number" />
-        </label>
-        <label>
-          Target final volume (liters): <input type="number" />
-        </label>
-        <label>
-          Mash temperature (&deg;C): <input type="number" />
-        </label>
-        <label>
-          Mash-out temperature (&deg;C): <input type="number" />
-        </label>
-
-        <div class="hops">
-          <h2>Hops <span class="hops__add" @click="addHop">+</span></h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Amount in Grams</th>
-                <th>Name</th>
-                <th>%AA</th>
-                <th>Time in Minutes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(_, i) in recipe.hops">
-                <td><input type="number" v-model="recipe.hops[i].amount" /></td>
-                <td><input type="text" v-model="recipe.hops[i].name" /></td>
-                <td><input type="number" v-model="recipe.hops[i].alphaAcids" /></td>
-                <td><input type="number" v-model="recipe.hops[i].time" /></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </form>
+      </div>
     </div>
     <script>
       let model = {
@@ -138,6 +150,9 @@
           },
           addHop() {
             this.recipe.hops.push({amount: 0, name: '', alphaAcids: 0, time: 0 });
+          },
+          removeHop(index) {
+            this.recipe.hops.splice(index, 1);
           }
         }
       });
