@@ -87,8 +87,13 @@ module.exports = function () {
     getBrew(id) {
       return brews.find(brew => brew.id == id);
     },
-    addBrew(brew) {
-      brews.push(brew);
+    putBrew(brew) {
+      let existingBrewIndex = brews.findIndex(x => x.id == brew.id);
+      if (existingBrewIndex === -1) {
+        brews.push(brew);
+      }
+
+      brews.splice(existingBrewIndex, 1, brew);
     }
   };
 };

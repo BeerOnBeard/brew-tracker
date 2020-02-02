@@ -23,7 +23,7 @@ app.get('/brews/:id', (req, res) => {
 });
 
 app.put('/brews/:id', (req, res) => {
-  dataAccess.addBrew(req.body);
+  dataAccess.putBrew(req.body);
   res.end();
 });
 

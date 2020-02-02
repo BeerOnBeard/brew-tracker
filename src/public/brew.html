@@ -32,21 +32,27 @@
     <div id="root" class="container">
       <h1>{{ brew.name }}</h1>
       <div class="actions">
-        <div>
-          <div>Brew Note</div>
-          <textarea v-model="brewNote"></textarea>
-          <button @click="addBrewNote">Add</button>
-        </div>
-        <div>
-          <div>Fermentation Note</div>
-          <textarea type="text" v-model="fermentationNote"></textarea>
-          <button @click="addFermentationNote">Add</button>
-        </div>
-        <div>
-          <div>Tasting Note</div>
-          <textarea type="text" v-model="tastingNote"></textarea>
-          <button @click="addTastingNote">Add</button>
-        </div>
+        <form @submit.prevent="addBrewNote">
+          <label>
+            Brew Note
+            <textarea v-model="brewNote"></textarea>
+          </label>
+          <button type="submit">Add</button>
+        </form>
+        <form @submit.prevent="addFermentationNote">
+          <label>
+            Fermentation Note
+            <textarea type="text" v-model="fermentationNote"></textarea>
+          </label>
+          <button>Add</button>
+        </form>
+        <form @submit.prevent="addTastingNote">
+          <label>
+            Tasting Note
+            <textarea type="text" v-model="tastingNote"></textarea>
+          </label>
+          <button>Add</button>
+        </form>
       </div>
       <div>
         <h2>Recipe</h2>
@@ -130,17 +136,39 @@
             brew: json
           },
           methods: {
-            addBrewNote() {
+            async addBrewNote() {
+              if (!this.brew.brewNotes) {
+                this.brew.brewNotes = [];
+              }
+
               this.brew.brewNotes.push({ time: moment().format(), note: this.brewNote });
               this.brewNote = '';
+              await this.persist();
             },
-            addFermentationNote() {
+            async addFermentationNote() {
+              if (!this.brew.fermentationNotes) {
+                this.brew.fermentationNotes = [];
+              }
+
               this.brew.fermentationNotes.push({ time: moment().format(), note: this.fermentationNote });
               this.fermentationNote = '';
+              await this.persist();
             },
-            addTastingNote() {
+            async addTastingNote() {
+              if (!this.brew.tastingNotes) {
+                this.brew.tastingNotes = [];
+              }
+
               this.brew.tastingNotes.push({ time: moment().format(), note: this.tastingNote });
               this.tastingNote = '';
+              await this.persist();
+            },
+            async persist() {
+              await fetch(`brews/${this.brew.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(this.brew)
+              });
             }
           }
         });
