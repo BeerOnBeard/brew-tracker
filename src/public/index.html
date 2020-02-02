@@ -11,17 +11,16 @@
       <h1>Brews</h1>
       <ul>
         <li v-for="brew in brews">
-          <a :href="baseUri + brew.id">{{ brew.name }}</a>
+          <a :href="'brew.html?id=' + brew.id">{{ brew.name }}</a>
         </li>
       </ul>
     </div>
     <script>
       window.onload = async () => {
-        const response = await fetch('http://localhost:3000/brews');
+        const response = await fetch('brews');
         const json = await response.json();
        
         let model = {
-          baseUri: 'http://localhost:3000/brew.html?id=',
           brews: json
         };
 
