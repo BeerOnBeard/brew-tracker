@@ -122,16 +122,14 @@
           targetFinalGravity: 1.009,
           fermentationTemperature: 21,
           mash: {
-            fermentables: [''],
+            fermentables: [],
             startingVolume: 26.5,
             spargeVolume: 1.5,
             targetFinalVolume: 21,
             mashTemperature: 65,
             mashOutTemperature: 77,
           },
-          hops: [
-            { amount: 0, name: '', alphaAcids: 0, time: 0 }
-          ]
+          hops: []
         }
       };
 
@@ -149,11 +147,19 @@
             this.recipe.hops.splice(index, 1);
           },
           async commit() {
-            await fetch(`brews/${this.id}`, {
+            const response = await fetch(`brews/${this.id}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(this.$data)
             });
+
+            if (!response.ok) {
+              alert('No dice. Check the console.');
+              console.error(response);
+              return;
+            }
+
+            window.location.href = '/';
           }
         }
       });
