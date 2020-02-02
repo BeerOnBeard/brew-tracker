@@ -44,69 +44,77 @@
   </head>
   <body>
     <div id="root" class="container">
-      <h1>New Brew</h1>
-      <label>
-        Name <input type="text" />
-      </label>
-      <label>
-        Yeast <input type="text" />
-      </label>
-      <label>
-        Target original gravity <input type="number" />
-      </label>
-      <label>
-        Target final gravity <input type="number" />
-      </label>
-      <label>
-        Fermentation temperature (&deg;C) <input type="number" />
-      </label>
-      
-      <h2>Mash</h2>
-      <div class="fermentables">
-        <h3>Fermentables <span class="fermentables__add" @click="addFermentable">+</span></h3>
-        <input type="text" v-for="(_, i) in recipe.mash.fermentables" v-model="recipe.mash.fermentables[i]" />
-      </div>
-      <label>
-        Starting volume (liters) <input type="number" />
-      </label>
-      <label>
-        Sparge volume (liters) <input type="number" />
-      </label>
-      <label>
-        Target final volume (liters) <input type="number" />
-      </label>
-      <label>
-        Mash temperature (&deg;C) <input type="number" />
-      </label>
-      <label>
-        Mash-out temperature (&deg;C) <input type="number" />
-      </label>
-
-      <div class="hops">
-        <h2>Hops <span class="hops__add" @click="addHop">+</span></h2>
-        <div class="hop" v-for="(_, i) in recipe.hops">
-          <label>
-            Amount in Grams
-            <input type="number" v-model="recipe.hops[i].amount" />
-          </label>
-          <label>
-            Name
-            <input type="text" v-model="recipe.hops[i].name" />
-          </label>
-          <label>
-            %AA
-            <input type="number" v-model="recipe.hops[i].alphaAcids" />
-          </label>
-          <label>
-            Time in Minutes
-            <input type="number" v-model="recipe.hops[i].time" />
-          </label>
-          <button class="hop__remove" @click="removeHop(i)">Remove</button>
+      <form @submit.prevent="commit">
+        <h1>New Brew</h1>
+        <label>
+          Name <input type="text" v-model="name" />
+        </label>
+        <label>
+          Yeast <input type="text" v-model="recipe.yeast" />
+        </label>
+        <label>
+          Target original gravity <input type="number" step="0.001" v-model="recipe.targetOriginalGravity" />
+        </label>
+        <label>
+          Target final gravity <input type="number" step="0.001" v-model="recipe.targetFinalGravity" />
+        </label>
+        <label>
+          Fermentation temperature (&deg;C) <input type="number" step="0.1" v-model="recipe.fermentationTemperature" />
+        </label>
+        
+        <h2>Mash</h2>
+        <div class="fermentables">
+          <h3>Fermentables <span class="fermentables__add" @click="addFermentable">+</span></h3>
+          <input type="text" v-for="(_, i) in recipe.mash.fermentables" v-model="recipe.mash.fermentables[i]" />
         </div>
-      </div>
+        <label>
+          Starting volume (liters) <input type="number" step="0.1" v-model="recipe.mash.startingVolume" />
+        </label>
+        <label>
+          Sparge volume (liters) <input type="number" step="0.1" v-model="recipe.mash.spargeVolume" />
+        </label>
+        <label>
+          Target final volume (liters) <input type="number" step="0.1" v-model="recipe.mash.targetFinalVolume" />
+        </label>
+        <label>
+          Mash temperature (&deg;C) <input type="number" step="0.1" v-model="recipe.mash.mashTemperature" />
+        </label>
+        <label>
+          Mash-out temperature (&deg;C) <input type="number" step="0.1" v-model="recipe.mash.mashOutTemperature" />
+        </label>
+
+        <div class="hops">
+          <h2>Hops <span class="hops__add" @click="addHop">+</span></h2>
+          <div class="hop" v-for="(_, i) in recipe.hops">
+            <label>
+              Amount in Grams
+              <input type="number" step="0.1" v-model="recipe.hops[i].amount" />
+            </label>
+            <label>
+              Name
+              <input type="text" v-model="recipe.hops[i].name" />
+            </label>
+            <label>
+              %AA
+              <input type="number" step="0.1" v-model="recipe.hops[i].alphaAcids" />
+            </label>
+            <label>
+              Time in Minutes
+              <input type="number" step="0.1" v-model="recipe.hops[i].time" />
+            </label>
+            <button class="hop__remove" @click="removeHop(i)">Remove</button>
+          </div>
+        </div>
+        <button type="submit">Commit</button>
+      </form>
     </div>
     <script>
+      let getGuid = () => {
+        let getRandomFour = () => (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        return `${getRandomFour()}${getRandomFour()}-${getRandomFour()}-${getRandomFour()}-${getRandomFour()}${getRandomFour()}${getRandomFour()}`.toLowerCase();
+      };
       let model = {
+        id: getGuid(),
         name: '',
         recipe: {
           yeast: '',
@@ -139,6 +147,13 @@
           },
           removeHop(index) {
             this.recipe.hops.splice(index, 1);
+          },
+          async commit() {
+            await fetch(`brews/${this.id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(this.$data)
+            });
           }
         }
       });

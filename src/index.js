@@ -2,9 +2,11 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-const dataAccess = require('./brewsStaticDataAccess');
+const DataAccess = require('./brewsStaticDataAccess');
+const dataAccess = new DataAccess();
 
 app.use(express.static('public'));
+app.use(express.json());
 
 app.get('/brews', (req, res) => {
   res.json(dataAccess.getBrews());
@@ -18,6 +20,11 @@ app.get('/brews/:id', (req, res) => {
   }
   
   res.json(brew);
+});
+
+app.put('/brews/:id', (req, res) => {
+  dataAccess.addBrew(req.body);
+  res.end();
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));
