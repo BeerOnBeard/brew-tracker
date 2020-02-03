@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-const DataAccess = require('./brewsStaticDataAccess');
+const DataAccess = require('./StaticDataAccess');
 const dataAccess = new DataAccess();
 
 app.use(express.static('public'));
