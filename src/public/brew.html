@@ -164,7 +164,7 @@
               await this.persist();
             },
             async persist() {
-              await fetch(`brews/${this.brew.id}`, {
+              await fetch(`brews/${this.brew._id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(this.brew)

@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+
+  brew-tracker:
+    build: ./src
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      BT_MONGO: mongodb://developer:changeit@mongo:27017/
+      BT_MONGO_DBNAME: brew-tracker
+
+  mongo:
+    image: mongo:4
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: developer
+      MONGO_INITDB_ROOT_PASSWORD: changeit
+
+  mongo-express:
+    image: mongo-express:0.54
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: developer
+      ME_CONFIG_MONGODB_ADMINPASSWORD: changeit

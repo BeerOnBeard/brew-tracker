@@ -114,7 +114,7 @@
         return `${getRandomFour()}${getRandomFour()}-${getRandomFour()}-${getRandomFour()}-${getRandomFour()}${getRandomFour()}${getRandomFour()}`.toLowerCase();
       };
       let model = {
-        id: getGuid(),
+        _id: getGuid(),
         name: '',
         recipe: {
           yeast: '',
@@ -147,7 +147,7 @@
             this.recipe.hops.splice(index, 1);
           },
           async commit() {
-            const response = await fetch(`brews/${this.id}`, {
+            const response = await fetch(`brews/${this.$data._id}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(this.$data)
