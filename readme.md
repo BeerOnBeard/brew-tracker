@@ -1,6 +1,6 @@
 # Brew Tracker
 
-I've been using a word document to track my recipes and brews and it's becoming overwhelming. I need the ability to track recipes and the brews I make on them.
+I've been using a word document to track my recipes and brews and it's becoming overwhelming. I need the ability to track recipes and the brews I make with them.
 
 ## How to Run
 
