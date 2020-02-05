@@ -23,6 +23,9 @@
         padding: 0.5rem;
         text-align: left;;
       }
+      .brew__note, .fermentation__note, .tasting__note {
+        white-space: pre;
+      }
     </style>
     <script type="text/javascript" src="moment.js"></script>
     <script type="text/javascript" src="moment-js-timezone.js"></script>
@@ -97,21 +100,21 @@
           <h2>Brew Notes</h2>
           <div v-for="note in brew.brewNotes">
             <h3>{{ note.time | formatTime }}</h3>
-            <div>{{ note.note }}</div>
+            <div class="brew__note">{{ note.note }}</div>
           </div>
         </div>
         <div>
           <h2>Fermentation Notes</h2>
           <div v-for="note in brew.fermentationNotes">
             <h3>{{ note.time | formatTime }}</h3>
-            <div>{{ note.note }}</div>
+            <div class="fermentation__note">{{ note.note }}</div>
           </div>
         </div>
         <div>
           <h2>Tasting Notes</h2>
           <div v-for="note in brew.tastingNotes">
             <h3>{{ note.time | formatTime }}</h3>
-            <div>{{ note.note }}</div>
+            <div class="tasting__note">{{ note.note }}</div>
           </div>
         </div>
       </div>
