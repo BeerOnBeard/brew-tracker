@@ -59,15 +59,16 @@
         <div>Yeast: {{ brew.recipe.yeast }}</div>
         <div>Target original gravity: {{ brew.recipe.targetOriginalGravity }}</div>
         <div>Target final gravity: {{ brew.recipe.targetFinalGravity }}</div>
-        <div>Fermentation temperature: {{ brew.recipe.fermentationTemperature }}&deg;C</div>
+        <div>Fermentation temperature: {{ brew.recipe.fermentationTemperature }}&deg;F</div>
         <div>
           <h3>Mash</h3>
           <div v-for="fermentable in brew.recipe.mash.fermentables">{{ fermentable }}</div>
-          <div>Starting volume: {{ brew.recipe.mash.startingVolume }} liters</div>
-          <div>Sparge volume: {{ brew.recipe.mash.spargeVolume }} liters</div>
-          <div>Target final volume: {{ brew.recipe.mash.targetFinalVolume }} liters</div>
-          <div>Mash temperature: {{ brew.recipe.mash.mashTemperature }}&deg;C</div>
-          <div>Mash-out temperature: {{ brew.recipe.mash.mashOutTemperature }}&deg;C</div>
+          <br />
+          <div>Starting volume: {{ brew.recipe.mash.startingVolume }} gallons</div>
+          <div>Sparge volume: {{ brew.recipe.mash.spargeVolume }} gallons</div>
+          <div>Target final volume: {{ brew.recipe.mash.targetFinalVolume }} gallons</div>
+          <div>Mash temperature: {{ brew.recipe.mash.mashTemperature }}&deg;F</div>
+          <div>Mash-out temperature: {{ brew.recipe.mash.mashOutTemperature }}&deg;F</div>
         </div>
         <div>
           <h3>Hops</h3>
@@ -82,7 +83,7 @@
             </thead>
             <tbody>
               <tr v-for="hop in brew.recipe.hops">
-                <td>{{ hop.amount }}g</td>
+                <td>{{ hop.amount }}oz</td>
                 <td>{{ hop.name }}</td>
                 <td>{{ hop.alphaAcids }}</td>
                 <td>{{ hop.time }} minutes</td>

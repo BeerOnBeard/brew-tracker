@@ -59,7 +59,7 @@
           Target final gravity <input type="number" step="0.001" v-model="recipe.targetFinalGravity" />
         </label>
         <label>
-          Fermentation temperature (&deg;C) <input type="number" step="0.1" v-model="recipe.fermentationTemperature" />
+          Fermentation temperature (&deg;F) <input type="number" step="0.1" v-model="recipe.fermentationTemperature" />
         </label>
         
         <h2>Mash</h2>
@@ -68,26 +68,26 @@
           <input type="text" v-for="(_, i) in recipe.mash.fermentables" v-model="recipe.mash.fermentables[i]" />
         </div>
         <label>
-          Starting volume (liters) <input type="number" step="0.1" v-model="recipe.mash.startingVolume" />
+          Starting volume (gallons) <input type="number" step="0.1" v-model="recipe.mash.startingVolume" />
         </label>
         <label>
-          Sparge volume (liters) <input type="number" step="0.1" v-model="recipe.mash.spargeVolume" />
+          Sparge volume (gallons) <input type="number" step="0.1" v-model="recipe.mash.spargeVolume" />
         </label>
         <label>
-          Target final volume (liters) <input type="number" step="0.1" v-model="recipe.mash.targetFinalVolume" />
+          Target final volume (gallons) <input type="number" step="0.1" v-model="recipe.mash.targetFinalVolume" />
         </label>
         <label>
-          Mash temperature (&deg;C) <input type="number" step="0.1" v-model="recipe.mash.mashTemperature" />
+          Mash temperature (&deg;F) <input type="number" step="0.1" v-model="recipe.mash.mashTemperature" />
         </label>
         <label>
-          Mash-out temperature (&deg;C) <input type="number" step="0.1" v-model="recipe.mash.mashOutTemperature" />
+          Mash-out temperature (&deg;F) <input type="number" step="0.1" v-model="recipe.mash.mashOutTemperature" />
         </label>
 
         <div class="hops">
           <h2>Hops <span class="hops__add" @click="addHop">+</span></h2>
           <div class="hop" v-for="(_, i) in recipe.hops">
             <label>
-              Amount in Grams
+              Amount in Ounces
               <input type="number" step="0.1" v-model="recipe.hops[i].amount" />
             </label>
             <label>
@@ -120,14 +120,14 @@
           yeast: '',
           targetOriginalGravity: 1.047,
           targetFinalGravity: 1.009,
-          fermentationTemperature: 21,
+          fermentationTemperature: 70,
           mash: {
             fermentables: [],
-            startingVolume: 26.5,
-            spargeVolume: 1.5,
-            targetFinalVolume: 21,
-            mashTemperature: 66,
-            mashOutTemperature: 77,
+            startingVolume: 7,
+            spargeVolume: 0.4,
+            targetFinalVolume: 5.5,
+            mashTemperature: 150,
+            mashOutTemperature: 170,
           },
           hops: []
         }
