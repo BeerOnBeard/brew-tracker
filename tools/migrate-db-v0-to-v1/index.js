@@ -3,13 +3,13 @@ const convertBrew = require('./convert');
 
 const v0MongoConnectionString = process.env.BT_V0_MONGO;
 const v0MongoDatabaseName = process.env.BT_V0_MONGO_DBNAME;
-const v0MongoCollectionName = process.env.BT_V0_MONGO_COLLECTION;
+const v0MongoCollectionName = 'brews';
 const v1MongoConnectionString = process.env.BT_V1_MONGO;
 const v1MongoDatabaseName = process.env.BT_V1_MONGO_DBNAME;
-const v1MongoCollectionName = process.env.BT_V1_MONGO_COLLECTION;
+const v1MongoCollectionName = 'brews';
 
-if (!v0MongoConnectionString || !v0MongoDatabaseName || !v0MongoCollectionName || !v1MongoConnectionString || !v1MongoDatabaseName || !v1MongoCollectionName) {
-  throw new Error('A required environment variable is missing. Please define all of the following: BT_V0_MONGO, BT_V0_MONGO_DBNAME, BT_V0_MONGO_COLLECTION, BT_V1_MONGO, BT_V1_MONGO_DBNAME, BT_V1_MONGO_COLLECTION.');
+if (!v0MongoConnectionString || !v0MongoDatabaseName || !v1MongoConnectionString || !v1MongoDatabaseName) {
+  throw new Error('A required environment variable is missing. Please define all of the following: BT_V0_MONGO, BT_V0_MONGO_DBNAME, BT_V1_MONGO, BT_V1_MONGO_DBNAME.');
 }
 
 (async () => {

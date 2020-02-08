@@ -5,10 +5,8 @@ trap "docker-compose down" EXIT;
 
 export BT_V0_MONGO=mongodb://developer:changeit@localhost:27017/
 export BT_V0_MONGO_DBNAME=brew-tracker
-export BT_V0_MONGO_COLLECTION=brews
 export BT_V1_MONGO=mongodb://developer:changeit@localhost:27017/
 export BT_V1_MONGO_DBNAME=brew-tracker-v1
-export BT_V1_MONGO_COLLECTION=brews
 
 docker-compose up -d;
 

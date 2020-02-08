@@ -9,3 +9,7 @@ docker-compose up
 ```
 
 Docker Compose will create a MongoDB database instance and run the NodeJS server configured to point to the MongoDB database.
+
+## Upgrades
+
+- [Migrate v0 Database to v1](tools/migrate-db-v0-to-v1/readme.md)

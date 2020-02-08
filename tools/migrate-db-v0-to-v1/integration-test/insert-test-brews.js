@@ -4,11 +4,11 @@ const brewTwo = require('./test-brew-two');
 
 const mongoConnectionString = process.env.BT_V0_MONGO;
 const mongoDatabaseName = process.env.BT_V0_MONGO_DBNAME;
-const mongoCollectionName = process.env.BT_V0_MONGO_COLLECTION;
+const mongoCollectionName = 'brews';
 
 (async () => {
-  if (!mongoConnectionString || !mongoDatabaseName || !mongoCollectionName) {
-    throw new Error('A required environment variable is missing. Please define all of the following: BT_V0_MONGO, BT_V0_MONGO_DBNAME, BT_V0_MONGO_COLLECTION.');
+  if (!mongoConnectionString || !mongoDatabaseName) {
+    throw new Error('A required environment variable is missing. Please define all of the following: BT_V0_MONGO, BT_V0_MONGO_DBNAME.');
   }
 
   const client = new MongoClient(mongoConnectionString, { useUnifiedTopology: true });
