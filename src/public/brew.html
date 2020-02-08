@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="page.css" />
     <style>
-      .actions {
+      .note-form {
         margin-bottom: 2rem;
       }
-      .actions > div {
-        margin-bottom: 1rem;
-      }
-      .actions textarea {
+      .note-form__text {
         width: 100%;
       }
       table {
@@ -23,7 +20,7 @@
         padding: 0.5rem;
         text-align: left;;
       }
-      .brew__note, .fermentation__note, .tasting__note {
+      .note__text {
         white-space: pre-wrap;
       }
     </style>
@@ -35,29 +32,15 @@
     <div id="root" class="container">
       <a href="/">Back to List</a>
       <h1>{{ brew.name }}</h1>
-      <div class="actions">
-        <form @submit.prevent="addBrewNote" v-on:keyup.ctrl.enter="addBrewNote">
-          <label>
-            Brew Note
-            <textarea v-model="brewNote"></textarea>
-          </label>
-          <button type="submit">Add</button>
-        </form>
-        <form @submit.prevent="addFermentationNote" v-on:keyup.ctrl.enter="addFermentationNote">
-          <label>
-            Fermentation Note
-            <textarea type="text" v-model="fermentationNote"></textarea>
-          </label>
-          <button>Add</button>
-        </form>
-        <form @submit.prevent="addTastingNote" v-on:keyup.ctrl.enter="addTastingNote">
-          <label>
-            Tasting Note
-            <textarea type="text" v-model="tastingNote"></textarea>
-          </label>
-          <button>Add</button>
-        </form>
-      </div>
+      <form class="note-form" @submit.prevent="addNote" v-on:keyup.ctrl.enter="addNote">
+        <h2>Add Note</h2>
+        <label>
+          Type
+          <input type="text" v-model="note.type" />
+        </label>
+        <textarea class="note-form__text" v-model="note.text"></textarea>
+        <button type="submit">Add</button>
+      </form>
       <div>
         <h2>Recipe</h2>
         <div>Yeast: {{ brew.recipe.yeast }}</div>
@@ -96,27 +79,11 @@
           </table>
         </div>
       </div>
-      <div>
-        <div>
-          <h2>Brew Notes</h2>
-          <div v-for="note in brew.brewNotes">
-            <h3>{{ note.time | formatTime }}</h3>
-            <div class="brew__note">{{ note.note }}</div>
-          </div>
-        </div>
-        <div>
-          <h2>Fermentation Notes</h2>
-          <div v-for="note in brew.fermentationNotes">
-            <h3>{{ note.time | formatTime }}</h3>
-            <div class="fermentation__note">{{ note.note }}</div>
-          </div>
-        </div>
-        <div>
-          <h2>Tasting Notes</h2>
-          <div v-for="note in brew.tastingNotes">
-            <h3>{{ note.time | formatTime }}</h3>
-            <div class="tasting__note">{{ note.note }}</div>
-          </div>
+      <div v-for="(notes, type) in notesDictionary">
+        <h2>{{ type }}</h2>
+        <div v-for="note in notes">
+          <h3>{{ note.moment.format('YYYY-MM-DD [@] HH:mm:ss') }}</h3>
+          <div class="note__text">{{ note.text }}</div>
         </div>
       </div>
     </div>
@@ -128,52 +95,44 @@
         const response = await fetch(`brews/${brewId}`);
         const json = await response.json();
 
-        Vue.filter('formatTime', function (value) {
-          return moment(value).format('YYYY-MM-DD [@] HH:mm:ss');
-        });
-
         var app = new Vue({
           el: '#root',
           data: {
-            brewNote: '',
-            fermentationNote: '',
-            tastingNote: '',
+            note: { type: '', text: '' },
             brew: json
           },
+          computed: {
+            notesDictionary() {
+              if (!this.brew.notes) {
+                return [];
+              }
+
+              return this.brew.notes
+                  // add moment for easy comparison
+                  .map(note => { return { ...note, moment: moment(note.time) } })
+                  .sort((left, right) => left.moment.diff(right.moment))
+                  // create dictionary using type as a lookup
+                  .reduce((dictionary, note) => {
+                    dictionary[note.type] === undefined ? dictionary[note.type] = [note]: dictionary[note.type].push(note);
+                    return dictionary;
+                  }, {});
+            }
+          },
           methods: {
-            async addBrewNote() {
-              if (!this.brew.brewNotes) {
-                this.brew.brewNotes = [];
+            async addNote() {
+              if (!this.brew.notes) {
+                this.brew.notes = [];
               }
 
-              this.brew.brewNotes.push({ time: moment().format(), note: this.brewNote });
-              this.brewNote = '';
-              await this.persist();
-            },
-            async addFermentationNote() {
-              if (!this.brew.fermentationNotes) {
-                this.brew.fermentationNotes = [];
-              }
+              this.brew.notes.push({ time: moment().format(), type: this.note.type, text: this.note.text });
 
-              this.brew.fermentationNotes.push({ time: moment().format(), note: this.fermentationNote });
-              this.fermentationNote = '';
-              await this.persist();
-            },
-            async addTastingNote() {
-              if (!this.brew.tastingNotes) {
-                this.brew.tastingNotes = [];
-              }
-
-              this.brew.tastingNotes.push({ time: moment().format(), note: this.tastingNote });
-              this.tastingNote = '';
-              await this.persist();
-            },
-            async persist() {
               await fetch(`brews/${this.brew._id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(this.brew)
               });
+
+              this.note.text = '';
             }
           }
         });
