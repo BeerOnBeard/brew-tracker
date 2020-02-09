@@ -36,7 +36,10 @@
         <h2>Add Note</h2>
         <label>
           Type
-          <input type="text" v-model="note.type" />
+          <input type="text" v-model="note.type" list="note-type-list" />
+          <datalist id="note-type-list">
+            <option v-for="type in noteTypes" :value="type"></option>
+          </datalist>
         </label>
         <textarea class="note-form__text" v-model="note.text"></textarea>
         <button type="submit">Add</button>
@@ -116,6 +119,15 @@
                     dictionary[note.type] === undefined ? dictionary[note.type] = [note]: dictionary[note.type].push(note);
                     return dictionary;
                   }, {});
+            },
+            noteTypes() {
+              if (!this.brew.notes) {
+                return [];
+              }
+
+              return this.brew.notes
+                  .map(note => note.type)
+                  .filter((value, index, source) => source.indexOf(value) === index);
             }
           },
           methods: {
