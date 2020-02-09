@@ -11,9 +11,13 @@ The following environment variables are required:
 | BT_V1_MONGO            | Mongo server connection string where you want the v1 database |
 | BT_V1_MONGO_DBNAME     | Name of the desired v1 database                               |
 
-Run the script using `npm`
+Then use `npm start` to run the tool. For example,
 
 ```bash
+export BT_V0_MONGO=mongodb://developer:changeit@localhost:27017/
+export BT_V0_MONGO_DBNAME=brew-tracker
+export BT_V1_MONGO=mongodb://developer:changeit@localhost:27017/
+export BT_V1_MONGO_DBNAME=brew-tracker-v1
 npm start
 ```
 
