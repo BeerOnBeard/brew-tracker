@@ -12,7 +12,7 @@ docker-compose up -d;
 npm start;
 ```
 
-Docker Compose will create a MongoDB database instance and run the NodeJS server configured to point to the MongoDB database.
+Docker Compose will create a MongoDB database instance and spin up a Mongo Express instance to provide easy access to the data. Then run the NodeJS server configured to point to the MongoDB database.
 
 ## Upgrades
 
