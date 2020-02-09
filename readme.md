@@ -5,11 +5,17 @@ I've been using a word document to track my recipes and brews and it's becoming 
 ## How to Run
 
 ```bash
+npm start;
+```
+
+## How to Run Development
+
+```bash
 docker-compose up -d;
 
 # wait for the database and mongo-express to come up
 
-npm start;
+npm run dev;
 ```
 
 Docker Compose will create a MongoDB database instance and spin up a Mongo Express instance to provide easy access to the data. Then run the NodeJS server configured to point to the MongoDB database.
