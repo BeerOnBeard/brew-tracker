@@ -1,6 +1,6 @@
 # Migrate v1 Database to v2 Tool
 
-Version 2 of the application uses a different schema to store the notes on a brew. This tool creates a new database created from the documents in the v1 database with the converted collection of brews.
+Version 2 of the application uses a different schema to store recipes as a separate collection from brews. This tool creates a new database created from the documents in the v1 database with the converted collection of brews and recipes.
 
 The following environment variables are required:
 
