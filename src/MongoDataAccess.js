@@ -1,17 +1,29 @@
 module.exports = function(db) {
-  const collectionName = 'brews';
+  const recipesCollectionName = 'recipes';
+  const brewsCollectionName = 'brews';
 
   return {
-    async getBrews() {
-      let result = await db.collection(collectionName).find().toArray();
+    async getRecipes() {
+      let result = await db.collection(recipesCollectionName).find().toArray();
+      return result;
+    },
+    async getRecipe(id) {
+      let result = await db.collection(recipesCollectionName).findOne({ _id: id });
+      return result;
+    },
+    async putRecipe(recipe) {
+      await db.collection(recipesCollectionName).findOneAndReplace({ _id: recipe._id }, recipe, { upsert: true });
+    },
+    async getBrews(recipeId) {
+      let result = await db.collection(brewsCollectionName).find({ "recipe._id" : recipeId }).toArray();
       return result;
     },
     async getBrew(id) {
-      let result =  await db.collection(collectionName).findOne({ _id: id });
+      let result =  await db.collection(brewsCollectionName).findOne({ _id: id });
       return result;
     },
     async putBrew(brew) {
-      await db.collection(collectionName).findOneAndReplace({ _id: brew._id }, brew, { upsert: true });
+      await db.collection(brewsCollectionName).findOneAndReplace({ _id: brew._id }, brew, { upsert: true });
     }
   }
 };

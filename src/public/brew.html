@@ -31,7 +31,8 @@
   <body>
     <div id="root" class="container">
       <a href="/">Back to List</a>
-      <h1>{{ brew.name }}</h1>
+      <h1>{{ brew.recipe.name }}</h1>
+      <div>Brew Started: {{ brew.dateStarted | formatTitleDate }}</div>
       <form class="note-form" @submit.prevent="addNote" v-on:keyup.ctrl.enter="addNote">
         <h2>Add Note</h2>
         <label>
@@ -98,18 +99,26 @@
         const response = await fetch(`brews/${brewId}`);
         const json = await response.json();
 
+        if (!json.notes) {
+          // if notes are undefined and then instantiated later,
+          // the computed property will not update correctly. If
+          // we instantiate the collection now, we're all good.
+          json.notes = [];
+        }
+
         var app = new Vue({
           el: '#root',
           data: {
             note: { type: '', text: '' },
             brew: json
           },
+          filters: {
+            formatTitleDate(value)  {
+              return moment(value).format('YYYY-MM-DD');
+            }
+          },
           computed: {
             notesDictionary() {
-              if (!this.brew.notes) {
-                return [];
-              }
-
               return this.brew.notes
                   // add moment for easy comparison
                   .map(note => { return { ...note, moment: moment(note.time) } })

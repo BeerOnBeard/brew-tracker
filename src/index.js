@@ -33,8 +33,35 @@ function createExpressApplication(dataAccess) {
   app.use(express.static('public'));
   app.use(express.json());
 
+  app.get('/recipes', async (req, res) => {
+    let recipes = await dataAccess.getRecipes();
+    res.json(recipes);
+  });
+
+  app.get('/recipes/:id', async (req, res) => {
+    let recipe = await dataAccess.getRecipe(req.params.id);
+    if (recipe === undefined) {
+      res.status(404).send('Not Found');
+      return;
+    }
+
+    res.json(recipe);
+  });
+
+  app.put('/recipes/:id', async (req, res) => {
+    let recipe = { ...req.body };
+    if (recipe._id !== req.params.id) {
+      res.status(400).send('Identifier in URI does not match identifier in object.');
+      return;
+    }
+
+    await dataAccess.putRecipe(recipe);
+    res.status(201).end();
+  })
+
+  // expecting /brews?recipeId={GUID}
   app.get('/brews', async (req, res) => {
-    let brews = await dataAccess.getBrews();
+    let brews = await dataAccess.getBrews(req.query.recipeId);
     res.json(brews);
   });
   
