@@ -8,21 +8,21 @@
   </head>
   <body>
     <div id="root" class="container">
-      <a href="new-brew.html">New Brew</a>
-      <h1>Brews</h1>
+      <a href="new-recipe.html">New Recipe</a>
+      <h1>Recipes</h1>
       <ul>
-        <li v-for="brew in brews">
-          <a :href="'brew.html?id=' + brew._id">{{ brew.name }}</a>
+        <li v-for="recipe in recipes">
+          <a :href="'recipe.html?id=' + recipe._id">{{ recipe.name }}</a>
         </li>
       </ul>
     </div>
     <script>
       window.onload = async () => {
-        const response = await fetch('brews');
+        const response = await fetch('recipes');
         const json = await response.json();
        
         let model = {
-          brews: json
+          recipes: json
         };
 
         let app = new Vue({

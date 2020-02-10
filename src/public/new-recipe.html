@@ -41,6 +41,7 @@
       }
     </style>
     <script type="text/javascript" src="vue.js"></script>
+    <script type="text/javascript" src="getGuid.js"></script>
   </head>
   <body>
     <div id="root" class="container">
@@ -50,57 +51,57 @@
           Name <input type="text" v-model="name" />
         </label>
         <label>
-          Yeast <input type="text" v-model="recipe.yeast" />
+          Yeast <input type="text" v-model="yeast" />
         </label>
         <label>
-          Target original gravity <input type="number" step="0.001" v-model="recipe.targetOriginalGravity" />
+          Target original gravity <input type="number" step="0.001" v-model="targetOriginalGravity" />
         </label>
         <label>
-          Target final gravity <input type="number" step="0.001" v-model="recipe.targetFinalGravity" />
+          Target final gravity <input type="number" step="0.001" v-model="targetFinalGravity" />
         </label>
         <label>
-          Fermentation temperature (&deg;F) <input type="number" step="0.1" v-model="recipe.fermentationTemperature" />
+          Fermentation temperature (&deg;F) <input type="number" step="0.1" v-model="fermentationTemperature" />
         </label>
         
         <h2>Mash</h2>
         <div class="fermentables">
           <h3>Fermentables <span class="fermentables__add" @click="addFermentable">+</span></h3>
-          <input type="text" v-for="(_, i) in recipe.mash.fermentables" v-model="recipe.mash.fermentables[i]" />
+          <input type="text" v-for="(_, i) in mash.fermentables" v-model="mash.fermentables[i]" />
         </div>
         <label>
-          Starting volume (gallons) <input type="number" step="0.1" v-model="recipe.mash.startingVolume" />
+          Starting volume (gallons) <input type="number" step="0.1" v-model="mash.startingVolume" />
         </label>
         <label>
-          Sparge volume (gallons) <input type="number" step="0.1" v-model="recipe.mash.spargeVolume" />
+          Sparge volume (gallons) <input type="number" step="0.1" v-model="mash.spargeVolume" />
         </label>
         <label>
-          Target final volume (gallons) <input type="number" step="0.1" v-model="recipe.mash.targetFinalVolume" />
+          Target final volume (gallons) <input type="number" step="0.1" v-model="mash.targetFinalVolume" />
         </label>
         <label>
-          Mash temperature (&deg;F) <input type="number" v-model="recipe.mash.mashTemperature" />
+          Mash temperature (&deg;F) <input type="number" v-model="mash.mashTemperature" />
         </label>
         <label>
-          Mash-out temperature (&deg;F) <input type="number" v-model="recipe.mash.mashOutTemperature" />
+          Mash-out temperature (&deg;F) <input type="number" v-model="mash.mashOutTemperature" />
         </label>
 
         <div class="hops">
           <h2>Hops <span class="hops__add" @click="addHop">+</span></h2>
-          <div class="hop" v-for="(_, i) in recipe.hops">
+          <div class="hop" v-for="(_, i) in hops">
             <label>
               Amount in Ounces
-              <input type="number" step="0.01" v-model="recipe.hops[i].amount" />
+              <input type="number" step="0.01" v-model="hops[i].amount" />
             </label>
             <label>
               Name
-              <input type="text" v-model="recipe.hops[i].name" />
+              <input type="text" v-model="hops[i].name" />
             </label>
             <label>
               %AA
-              <input type="number" step="0.1" v-model="recipe.hops[i].alphaAcids" />
+              <input type="number" step="0.1" v-model="hops[i].alphaAcids" />
             </label>
             <label>
               Time in Minutes
-              <input type="number" v-model="recipe.hops[i].time" />
+              <input type="number" v-model="hops[i].time" />
             </label>
             <button class="hop__remove" @click="removeHop(i)">Remove</button>
           </div>
@@ -109,28 +110,22 @@
       </form>
     </div>
     <script>
-      let getGuid = () => {
-        let getRandomFour = () => (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-        return `${getRandomFour()}${getRandomFour()}-${getRandomFour()}-${getRandomFour()}-${getRandomFour()}${getRandomFour()}${getRandomFour()}`.toLowerCase();
-      };
       let model = {
         _id: getGuid(),
         name: '',
-        recipe: {
-          yeast: '',
-          targetOriginalGravity: 1.047,
-          targetFinalGravity: 1.009,
-          fermentationTemperature: 70,
-          mash: {
-            fermentables: [],
-            startingVolume: 7,
-            spargeVolume: 0.4,
-            targetFinalVolume: 5.5,
-            mashTemperature: 150,
-            mashOutTemperature: 170,
-          },
-          hops: []
-        }
+        yeast: '',
+        targetOriginalGravity: 1.047,
+        targetFinalGravity: 1.009,
+        fermentationTemperature: 70,
+        mash: {
+          fermentables: [],
+          startingVolume: 7,
+          spargeVolume: 0.4,
+          targetFinalVolume: 5.5,
+          mashTemperature: 150,
+          mashOutTemperature: 170,
+        },
+        hops: []
       };
 
       let app = new Vue({
@@ -138,16 +133,16 @@
         data: model,
         methods: {
           addFermentable() {
-            this.recipe.mash.fermentables.push('');
+            this.mash.fermentables.push('');
           },
           addHop() {
-            this.recipe.hops.push({amount: 0, name: '', alphaAcids: 0, time: 0 });
+            this.hops.push({amount: 0, name: '', alphaAcids: 0, time: 0 });
           },
           removeHop(index) {
-            this.recipe.hops.splice(index, 1);
+            this.hops.splice(index, 1);
           },
           async commit() {
-            const response = await fetch(`brews/${this.$data._id}`, {
+            const response = await fetch(`recipes/${this.$data._id}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(this.$data)
@@ -159,7 +154,7 @@
               return;
             }
 
-            window.location.href = '/';
+            window.location.href = `recipe.html?id=${this.$data._id}`;
           }
         }
       });
