@@ -1,0 +1,21 @@
+{
+  "name": "migrate-db-v1-to-v2",
+  "version": "1.0.0",
+  "description": "Tool to migrate a brew-tracker database from v1 to v2 where recipes are separated from brew days.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest",
+    "integration-test": "cd integration-test && ./test.sh"
+  },
+  "author": "Adam Fournier",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^25.1.0"
+  },
+  "dependencies": {
+    "moment": "^2.24.0",
+    "mongo": "^0.1.0",
+    "uuid": "^3.4.0"
+  }
+}
