@@ -23,3 +23,4 @@ Docker Compose will create a MongoDB database instance and spin up a Mongo Expre
 ## Upgrades
 
 - [Migrate v0 Database to v1](tools/migrate-db-v0-to-v1/readme.md)
+- [Migrate v1 Database to v2](tools/migrate-db-v1-to-v2/readme.md)
