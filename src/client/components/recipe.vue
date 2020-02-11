@@ -36,8 +36,20 @@
         </tbody>
       </table>
     </div>
-  </div>  
+  </div>
 </template>
+<style scoped>
+.recipe-hops-table {
+  border-spacing: 0.5rem;
+  border-collapse: collapse;
+}
+.recipe-hops-table th,
+.recipe-hops-table td {
+  border: 1px solid black;
+  padding: 0.5rem;
+  text-align: left;;
+}
+</style>
 <script>
 export default {
   props: {

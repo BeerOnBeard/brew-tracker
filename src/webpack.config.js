@@ -1,18 +1,12 @@
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: {
-    index: "./client/index.js",
-    recipe: "./client/recipe.js",
-    brew: './client/brew.js',
-    'new-recipe': './client/new-recipe.js'
-  },
+  entry: './client/index.js',
   output: {
-    filename: '[name].js',
+    filename: 'index.js',
     path: path.join(__dirname, 'public')
   },
   module: {
@@ -30,33 +24,21 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader'
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader'
+        ]
       }
     ]
   },
   plugins: [
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
-      chunks: [ 'index' ],
       filename: 'index.html',
       template: './client/template.html'
-    }),
-    new HtmlWebpackPlugin({
-      chunks: [ 'recipe' ],
-      filename: 'recipe.html',
-      template: './client/template.html'
-    }),
-    new HtmlWebpackPlugin({
-      chunks: [ 'brew' ],
-      filename: 'brew.html',
-      template: './client/template.html'
-    }),
-    new HtmlWebpackPlugin({
-      chunks: [ 'new-recipe' ],
-      filename: 'new-recipe.html',
-      template: './client/template.html'
-    }),
-    new CopyPlugin([
-      { from: './client/page.css' },
-    ])
+    })
   ]
 };

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <form @submit.prevent="commit" class="new-recipe">
       <h1>New Recipe</h1>
       <label>
@@ -65,6 +65,42 @@
     </form>
   </div>
 </template>
+<style scoped>
+.new-recipe label {
+  display: block;
+  margin-bottom: 1rem;
+  margin-right: 0.5rem;
+}
+.new-recipe input {
+  line-height: 2rem;
+  display: block;
+}
+.new-recipe .fermentables {
+  margin-bottom: 1rem;
+}
+.new-recipe .fermentables__add{
+  font-size: 1.5rem;
+  color: green;
+  cursor: pointer;
+}
+.new-recipe .hops__add {
+  color: green;
+  cursor: pointer;
+}
+.new-recipe .hop {
+  border: 1px solid black;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.new-recipe .hop__remove {
+  background: red;
+  color: white;
+  height: 2rem;
+}
+</style>
 <script>
 import getGuid from 'uuid/v4';
 export default {

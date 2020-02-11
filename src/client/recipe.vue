@@ -1,14 +1,14 @@
 <template>
-  <div class="container" v-if="recipe">
+  <div>
     <a href="/">Back to List</a>
     <button @click="startNewBrewDay">Start New Brew Day</button>
     <h1>{{ recipe.name }}</h1>
     <recipe :recipe="recipe"></recipe>
-    <div v-if="brews">
+    <div>
       <h2>Brews</h2>
       <ul>
       <li v-for="brew in brews" :key="brew._id">
-        <a :href="'brew.html?id=' + brew._id">{{ brew.dateStarted | formatBrewDate }}</a>
+        <router-link :to="{ name: 'brew', params: { id: brew._id } }">{{ brew.dateStarted | formatBrewDate }}</router-link>
       </li>
       </ul>
     </div>
@@ -20,23 +20,18 @@ import moment from 'moment';
 import getGuid from 'uuid/v4';
 
 export default {
+  props: { id: String },
   data() {
     return { recipe: undefined, brews: undefined };
   },
   async created() {
-    const recipeId = this.getRecipeId();
-    this.recipe = await this.fetchRecipe(recipeId);
-    this.brews = await this.fetchBrews(recipeId);
+    this.recipe = await this.fetchRecipe(this.id);
+    this.brews = await this.fetchBrews(this.id);
   },
   components: {
     recipe
   },
   methods: {
-    getRecipeId() {
-      const url = new URL(window.location);
-      const parameters = new URLSearchParams(url.search);
-      return parameters.get('id');
-    },
     async fetchRecipe(id) {
       const response = await fetch(`recipes/${id}`);
       return await response.json();

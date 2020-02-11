@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="brew">
+  <div>
     <a href="/">Back to List</a>
     <h1>{{ brew.recipe.name }}</h1>
     <div>Brew Started: {{ brew.dateStarted | formatTitleDate }}</div>
@@ -25,10 +25,24 @@
     </div>
   </div>
 </template>
+<style scoped>
+.note-form {
+  margin-bottom: 2rem;
+}
+.note-form__text {
+  width: 100%;
+}
+.note__text {
+  white-space: pre-wrap;
+}
+</style>
 <script>
 import recipe from './components/recipe.vue';
 import moment from 'moment';
 export default {
+  props: {
+    id: String
+  },
   data() {
     return {
       note: { type: '', text: '' },
@@ -36,8 +50,7 @@ export default {
     };
   },
   async created() {
-    const brewId = this.getBrewId();
-    this.brew = await this.getBrew(brewId);
+    this.brew = await this.getBrew(this.id);
   },
   components: {
     recipe
@@ -66,11 +79,6 @@ export default {
     }
   },
   methods: {
-    getBrewId() {
-      const url = new URL(window.location);
-      const parameters = new URLSearchParams(url.search);
-      return parameters.get('id');
-    },
     async getBrew(id) {
       const response = await fetch(`brews/${id}`);
       const json = await response.json();
