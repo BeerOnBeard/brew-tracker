@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "BT_MONGO=mongodb://developer:changeit@localhost:27017/ BT_MONGO_DBNAME=brew-tracker node server.js",
-    "build-client": "webpack"
+    "build-client": "rm -rf public && webpack"
   },
   "author": "Adam Fournier",
   "license": "ISC",

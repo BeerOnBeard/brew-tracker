@@ -1,4 +1,5 @@
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
@@ -34,11 +35,27 @@ module.exports = {
   },
   plugins: [
     new VueLoaderPlugin(),
+    new HtmlWebpackPlugin({
+      chunks: [ 'index' ],
+      filename: 'index.html',
+      template: './client/template.html'
+    }),
+    new HtmlWebpackPlugin({
+      chunks: [ 'recipe' ],
+      filename: 'recipe.html',
+      template: './client/template.html'
+    }),
+    new HtmlWebpackPlugin({
+      chunks: [ 'brew' ],
+      filename: 'brew.html',
+      template: './client/template.html'
+    }),
+    new HtmlWebpackPlugin({
+      chunks: [ 'new-recipe' ],
+      filename: 'new-recipe.html',
+      template: './client/template.html'
+    }),
     new CopyPlugin([
-      { from: './client/index.html' },
-      { from: './client/brew.html' },
-      { from: './client/recipe.html' },
-      { from: './client/new-recipe.html' },
       { from: './client/page.css' },
     ])
   ]
