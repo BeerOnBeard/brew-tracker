@@ -15,7 +15,7 @@ if (!mongoDatabaseName) {
   throw new Error('Mongo database name not specified. Declare environment variable BT_MONGO_DBNAME.')
 }
 
-const client = MongoClient(mongoConnectionString);
+const client = MongoClient(mongoConnectionString, { useUnifiedTopology: true });
 client.connect((err, client) => {
   if (err) {
     throw err;
