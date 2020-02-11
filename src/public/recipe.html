@@ -4,65 +4,18 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="page.css" />
-    <style>
-      table {
-        border-spacing: 0.5rem;
-        border-collapse: collapse;
-      }
-      td, th {
-        border: 1px solid black;
-        padding: 0.5rem;
-        text-align: left;;
-      }
-    </style>
     <script type="text/javascript" src="moment.js"></script>
     <script type="text/javascript" src="moment-js-timezone.js"></script>
     <script type="text/javascript" src="vue.js"></script>
     <script type="text/javascript" src="getGuid.js"></script>
+    <script type="text/javascript" src="recipe.js"></script>
   </head>
   <body>
     <div id="root" class="container">
       <a href="/">Back to List</a>
       <button @click="startNewBrewDay">Start New Brew Day</button>
       <h1>{{ recipe.name }}</h1>
-      <div>
-        <h2>Recipe</h2>
-        <div>Yeast: {{ recipe.yeast }}</div>
-        <div>Target original gravity: {{ recipe.targetOriginalGravity }}</div>
-        <div>Target final gravity: {{ recipe.targetFinalGravity }}</div>
-        <div>Fermentation temperature: {{ recipe.fermentationTemperature }}&deg;F</div>
-        <div>
-          <h3>Mash</h3>
-          <div v-for="fermentable in recipe.mash.fermentables">{{ fermentable }}</div>
-          <br />
-          <div>Starting volume: {{ recipe.mash.startingVolume }} gallons</div>
-          <div>Sparge volume: {{ recipe.mash.spargeVolume }} gallons</div>
-          <div>Target final volume: {{ recipe.mash.targetFinalVolume }} gallons</div>
-          <div>Mash temperature: {{ recipe.mash.mashTemperature }}&deg;F</div>
-          <div>Mash-out temperature: {{ recipe.mash.mashOutTemperature }}&deg;F</div>
-        </div>
-        <div>
-          <h3>Hops</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Amount</th>
-                <th>Name</th>
-                <th>%AA</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="hop in recipe.hops">
-                <td>{{ hop.amount }}oz</td>
-                <td>{{ hop.name }}</td>
-                <td>{{ hop.alphaAcids }}</td>
-                <td>{{ hop.time }} minutes</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <recipe :recipe="recipe"></recipe>
       <div>
         <h2>Brews</h2>
         <ul>
