@@ -1,8 +1,11 @@
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, createLocalVue } from '@vue/test-utils';
+import VueRouter from 'vue-router';
 import Brew from './Brew.vue';
 import DataAccess from './DataAccess';
+import { routes } from './routing/routes';
 
 jest.mock('./DataAccess');
+const router = new VueRouter({ routes });
 
 describe('Brew', () => {
   let wrapper;
@@ -15,10 +18,13 @@ describe('Brew', () => {
       },
       notes: []
     };
+    
+    const localVue = createLocalVue();
+    localVue.use(VueRouter);
 
     DataAccess.mockClear();
     DataAccess.getBrew.mockResolvedValue({ brew: mockBrew });
-    wrapper = shallowMount(Brew);
+    wrapper = shallowMount(Brew, { localVue, router });
   });
 
   test('will get the brew when created', () => {
