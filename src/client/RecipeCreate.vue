@@ -145,7 +145,7 @@ export default {
         return;
       }
 
-      this.$router.push({ name: routes.recipeRoute.name, params: { id: this.$data._id } });
+      this.$router.push({ name: recipeRoute.name, params: { id: this.$data._id } });
     }
   }
 }
