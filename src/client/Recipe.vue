@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div v-if="recipe">
     <a href="/">Back to List</a>
     <button @click="startNewBrewDay">Start New Brew Day</button>
     <h1>{{ recipe.name }}</h1>
     <RecipeView :recipe="recipe" />
-    <div>
+    <div v-if="brews">
       <h2>Brews</h2>
       <ul>
       <li v-for="brew in brews" :key="brew._id">
@@ -16,6 +16,7 @@
 </template>
 <script>
 import RecipeView from './components/RecipeView.vue';
+import DataAccess from './DataAccess';
 import moment from 'moment';
 import getGuid from 'uuid/v4';
 
@@ -26,43 +27,39 @@ export default {
     return { recipe: undefined, brews: undefined };
   },
   async created() {
-    this.recipe = await this.fetchRecipe(this.id);
-    this.brews = await this.fetchBrews(this.id);
+    const recipeResponse = await DataAccess.getRecipe(this.id);
+    if (recipeResponse.err) {
+      alert('No dice. Check the console.');
+      console.error(recipeResponse.err)
+      return;
+    }
+
+    this.recipe = recipeResponse.recipe;
+
+    const brewsResponse = await DataAccess.getBrews(this.id);
+    if (brewsResponse.err) {
+      alert('No dice. Check the console.');
+      console.error(brewsResponse.err)
+      return;
+    }
+
+    this.brews = brewsResponse.brews;
   },
   components: {
     RecipeView
   },
   methods: {
-    async fetchRecipe(id) {
-      const response = await fetch(`recipes/${id}`);
-      return await response.json();
-    },
-    async fetchBrews(recipeId) {
-      const response = await fetch(`brews?recipeId=${recipeId}`);
-      if (response.ok) {
-        return await response.json();
-      } else if (response.status !== 404) {
-        alert('There was an error getting the brews related to this recipe. Check the console');
-        console.error(response);
-      }
-
-      return [];
-    },
     async startNewBrewDay() {
       const brewId = getGuid();
-      const response = await fetch(`brews/${brewId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          _id: brewId,
-          recipe: this.recipe,
-          dateStarted: moment().format()
-        })
+      const response = await DataAccess.putBrew({
+        _id: brewId,
+        recipe: this.recipe,
+        dateStarted: moment().format()
       });
 
-      if (!response.ok) {
+      if (response.err) {
         alert('No dice. Check the console.');
-        console.error(response);
+        console.error(response.err);
         return;
       }
 

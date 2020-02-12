@@ -1,5 +1,16 @@
 export default class DataAccess {
 
+  // return { err, recipe }
+  static async getRecipe(id) {
+    const response = await fetch(`recipes/${id}`);
+    if (!response.ok) {
+      return { err: response };
+    }
+
+    const json = await response.json();
+    return { recipe: json };
+  }
+
   // returns { err }
   static async putRecipe(recipe) {
     const response = await fetch(`recipes/${recipe._id}`, {
@@ -13,6 +24,17 @@ export default class DataAccess {
     }
 
     return {};
+  }
+
+  // returns { err, brews }
+  static async getBrews(recipeId) {
+    const response = await fetch(`brews?recipeId=${recipeId}`);
+    if (!response.ok) {
+      return { err: response };
+    }
+
+    const json = await response.json();
+    return { brews: json };
   }
 
   // returns { err, brew }
