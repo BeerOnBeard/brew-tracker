@@ -103,6 +103,8 @@
 </style>
 <script>
 import getGuid from 'uuid/v4';
+import DataAccess from './DataAccess';
+
 export default {
   name: 'RecipeCreate',
   data() {
@@ -135,13 +137,8 @@ export default {
       this.hops.splice(index, 1);
     },
     async commit() {
-      const response = await fetch(`recipes/${this.$data._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.$data)
-      });
-
-      if (!response.ok) {
+      const response = await DataAccess.putRecipe(this.$data);
+      if (response.err) {
         alert('No dice. Check the console.');
         console.error(response);
         return;
