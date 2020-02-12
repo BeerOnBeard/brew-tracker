@@ -7,7 +7,7 @@
     <div>Fermentation temperature: {{ recipe.fermentationTemperature }}&deg;F</div>
     <div>
       <h3>Mash</h3>
-      <div v-for="fermentable in recipe.mash.fermentables">{{ fermentable }}</div>
+      <div v-for="fermentable in recipe.mash.fermentables" :key="fermentable">{{ fermentable }}</div>
       <br />
       <div>Starting volume: {{ recipe.mash.startingVolume }} gallons</div>
       <div>Sparge volume: {{ recipe.mash.spargeVolume }} gallons</div>
@@ -27,7 +27,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="hop in recipe.hops">
+          <tr v-for="hop in recipe.hops" :key="hop.amount + hop.name + hop.alphaAcids + hop.time">
             <td>{{ hop.amount }}oz</td>
             <td>{{ hop.name }}</td>
             <td>{{ hop.alphaAcids }}</td>
