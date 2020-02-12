@@ -104,6 +104,7 @@
 <script>
 import getGuid from 'uuid/v4';
 import DataAccess from './DataAccess';
+import { recipeRoute } from './routing/routes';
 
 export default {
   name: 'RecipeCreate',
@@ -144,7 +145,7 @@ export default {
         return;
       }
 
-      this.$router.push({ name: 'recipe', params: { id: this.$data._id } });
+      this.$router.push({ name: routes.recipeRoute.name, params: { id: this.$data._id } });
     }
   }
 }

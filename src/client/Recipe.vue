@@ -1,6 +1,6 @@
 <template>
   <div v-if="recipe">
-    <a href="/">Back to List</a>
+    <router-link :to="{ name: routes.indexRoute.name }">Back to List</router-link>
     <button @click="startNewBrewDay">Start New Brew Day</button>
     <h1>{{ recipe.name }}</h1>
     <RecipeView :recipe="recipe" />
@@ -8,7 +8,7 @@
       <h2>Brews</h2>
       <ul>
       <li v-for="brew in brews" :key="brew._id">
-        <router-link :to="{ name: 'brew', params: { id: brew._id } }">{{ brew.dateStarted | formatBrewDate }}</router-link>
+        <router-link :to="{ name: routes.brewRoute.name, params: { id: brew._id } }">{{ brew.dateStarted | formatBrewDate }}</router-link>
       </li>
       </ul>
     </div>
@@ -19,12 +19,17 @@ import RecipeView from './components/RecipeView.vue';
 import DataAccess from './DataAccess';
 import moment from 'moment';
 import getGuid from 'uuid/v4';
+import { indexRoute, brewRoute } from './routing/routes';
 
 export default {
   name: 'Recipe',
   props: { id: String },
   data() {
-    return { recipe: undefined, brews: undefined };
+    return {
+      recipe: undefined,
+      brews: undefined,
+      routes: { indexRoute, brewRoute }
+    };
   },
   async created() {
     const recipeResponse = await DataAccess.getRecipe(this.id);
@@ -63,7 +68,7 @@ export default {
         return;
       }
 
-      this.$router.push({ name: 'brew', params: { id: brewId }});
+      this.$router.push({ name: brewRoute.name, params: { id: brewId }});
     }
   },
   filters: {

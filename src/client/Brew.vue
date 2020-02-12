@@ -1,6 +1,6 @@
 <template>
   <div v-if="brew">
-    <a href="/">Back to List</a>
+    <router-link :to="{ name: routes.indexRoute.name }">Back to List</router-link>
     <h1>{{ brew.recipe.name }}</h1>
     <div>Brew Started: {{ brew.dateStarted | formatBrewStartedDate }}</div>
     <form class="note-form" @submit.prevent="addNote" v-on:keyup.ctrl.enter="addNote">
@@ -40,6 +40,7 @@
 import RecipeView from './components/RecipeView.vue';
 import moment from 'moment';
 import DataAccess from './DataAccess';
+import { indexRoute } from './routing/routes';
 
 export default {
   name: 'Brew',
@@ -49,7 +50,8 @@ export default {
   data() {
     return {
       note: { type: '', text: '' },
-      brew: undefined
+      brew: undefined,
+      routes: { indexRoute }
     };
   },
   async created() {
