@@ -146,7 +146,7 @@ export default {
         return;
       }
 
-      window.location.href = `recipe.html?id=${this.$data._id}`;
+      this.$router.push({ name: 'recipe', params: { id: this.$data._id } });
     }
   }
 }

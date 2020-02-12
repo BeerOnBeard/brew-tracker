@@ -65,7 +65,7 @@ export default {
         return;
       }
 
-      window.location.href = `/brew.html?id=${brewId}`;
+      this.$router.push({ name: 'brew', params: { id: brewId }});
     }
   },
   filters: {
