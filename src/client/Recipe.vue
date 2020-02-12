@@ -3,7 +3,7 @@
     <a href="/">Back to List</a>
     <button @click="startNewBrewDay">Start New Brew Day</button>
     <h1>{{ recipe.name }}</h1>
-    <recipe :recipe="recipe"></recipe>
+    <RecipeView :recipe="recipe" />
     <div>
       <h2>Brews</h2>
       <ul>
@@ -15,7 +15,7 @@
   </div>
 </template>
 <script>
-import recipe from './components/recipe.vue';
+import RecipeView from './components/RecipeView.vue';
 import moment from 'moment';
 import getGuid from 'uuid/v4';
 
@@ -30,7 +30,7 @@ export default {
     this.brews = await this.fetchBrews(this.id);
   },
   components: {
-    recipe
+    RecipeView
   },
   methods: {
     async fetchRecipe(id) {

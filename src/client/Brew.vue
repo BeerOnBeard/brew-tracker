@@ -15,7 +15,7 @@
       <textarea class="note-form__text" v-model="note.text"></textarea>
       <button type="submit">Add</button>
     </form>
-    <recipe :recipe="brew.recipe"></recipe>
+    <RecipeView :recipe="brew.recipe" />
     <div v-for="(notes, type) in notesDictionary" :key="type">
       <h2>{{ type }}</h2>
       <div v-for="note in notes" :key="note.time">
@@ -37,7 +37,7 @@
 }
 </style>
 <script>
-import recipe from './components/recipe.vue';
+import RecipeView from './components/RecipeView.vue';
 import moment from 'moment';
 export default {
   name: 'Brew',
@@ -54,7 +54,7 @@ export default {
     this.brew = await this.getBrew(this.id);
   },
   components: {
-    recipe
+    RecipeView
   },
   filters: {
     formatTitleDate(value)  {
