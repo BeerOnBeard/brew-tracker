@@ -40,6 +40,7 @@
 import recipe from './components/recipe.vue';
 import moment from 'moment';
 export default {
+  name: 'Brew',
   props: {
     id: String
   },

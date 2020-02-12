@@ -52,6 +52,7 @@
 </style>
 <script>
 export default {
+  name: 'RecipeView',
   props: {
     recipe: Object
   }

@@ -104,6 +104,7 @@
 <script>
 import getGuid from 'uuid/v4';
 export default {
+  name: 'RecipeCreate',
   data() {
     return {
       _id: getGuid(),

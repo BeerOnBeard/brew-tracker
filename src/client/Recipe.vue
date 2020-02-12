@@ -20,6 +20,7 @@ import moment from 'moment';
 import getGuid from 'uuid/v4';
 
 export default {
+  name: 'Recipe',
   props: { id: String },
   data() {
     return { recipe: undefined, brews: undefined };
