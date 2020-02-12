@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div v-if="brew">
     <a href="/">Back to List</a>
     <h1>{{ brew.recipe.name }}</h1>
-    <div>Brew Started: {{ brew.dateStarted | formatTitleDate }}</div>
+    <div>Brew Started: {{ brew.dateStarted | formatBrewStartedDate }}</div>
     <form class="note-form" @submit.prevent="addNote" v-on:keyup.ctrl.enter="addNote">
       <h2>Add Note</h2>
       <label>
@@ -39,6 +39,8 @@
 <script>
 import RecipeView from './components/RecipeView.vue';
 import moment from 'moment';
+import DataAccess from './DataAccess';
+
 export default {
   name: 'Brew',
   props: {
@@ -51,13 +53,20 @@ export default {
     };
   },
   async created() {
-    this.brew = await this.getBrew(this.id);
+    let response = await DataAccess.getBrew(this.id);
+    if (response.err) {
+      alert('No dice. Check the console.');
+      console.error(response.err);
+      return;
+    }
+
+    this.brew = response.brew;
   },
   components: {
     RecipeView
   },
   filters: {
-    formatTitleDate(value)  {
+    formatBrewStartedDate(value)  {
       return moment(value).format('YYYY-MM-DD');
     }
   },
@@ -80,26 +89,15 @@ export default {
     }
   },
   methods: {
-    async getBrew(id) {
-      const response = await fetch(`brews/${id}`);
-      const json = await response.json();
-      if (!json.notes) {
-        // if notes are undefined and then instantiated later,
-        // the computed property will not update correctly. If
-        // we instantiate the collection now, we're all good.
-        json.notes = [];
-      }
-
-      return json;
-    },
     async addNote() {
       this.brew.notes.push({ time: moment().format(), type: this.note.type, text: this.note.text });
-      await fetch(`brews/${this.brew._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.brew)
-      });
-
+      const response = await DataAccess.putBrew(this.brew);
+      if (response.err) {
+        alert('No dice. Check the console.');
+        console.error(response.err);
+        return;
+      }
+      
       this.note.text = '';
     }
   }

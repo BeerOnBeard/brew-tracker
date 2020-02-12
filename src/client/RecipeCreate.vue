@@ -140,7 +140,7 @@ export default {
       const response = await DataAccess.putRecipe(this.$data);
       if (response.err) {
         alert('No dice. Check the console.');
-        console.error(response);
+        console.error(response.err);
         return;
       }
 
