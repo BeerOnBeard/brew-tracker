@@ -1,6 +1,17 @@
 export default class DataAccess {
 
-  // return { err, recipe }
+  // returns { err, recipes }
+  static async getRecipes() {
+    const response = await fetch('recipes');
+    if (!response.ok) {
+      return { err: response };
+    }
+
+    const json = await response.json();
+    return { recipes: json };
+  }
+
+  // returns { err, recipe }
   static async getRecipe(id) {
     const response = await fetch(`recipes/${id}`);
     if (!response.ok) {
