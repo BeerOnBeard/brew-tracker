@@ -1,16 +1,21 @@
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, createLocalVue } from '@vue/test-utils';
+import VueRouter from 'vue-router';
 import RecipeCreate from './RecipeCreate.vue';
 import DataAccess from './DataAccess';
+import { routes, recipeRoute } from './routing/routes';
 
 jest.mock('./DataAccess');
+const router = new VueRouter({ routes });
 
 describe('RecipeCreate', () => {
   let wrapper;
-  let mockRouter;
+
   beforeEach(() => {
-    mockRouter = { push: jest.fn() };
-    wrapper = shallowMount(RecipeCreate, { mocks: { $router: mockRouter } });
+    const localVue = createLocalVue();
+    localVue.use(VueRouter);
+
     DataAccess.mockClear();
+    wrapper = shallowMount(RecipeCreate, { localVue, router });
   })
 
   test('will add a fermentable correctly', () => {
@@ -38,9 +43,7 @@ describe('RecipeCreate', () => {
     const expectedId = 'expected';
     wrapper.vm.$data._id = expectedId;
     await wrapper.vm.commit();
-    await wrapper.vm.$nextTick();
-    expect(mockRouter.push.mock.calls[0]).toEqual(expect.arrayContaining([
-      { name: 'recipe', params: { id: expectedId } }
-    ]));
+    expect(wrapper.vm.$route.name).toEqual(recipeRoute.name);
+    expect(wrapper.vm.$route.params.id).toEqual(expectedId);
   });
 });

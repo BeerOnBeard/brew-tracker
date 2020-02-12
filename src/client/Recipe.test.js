@@ -2,9 +2,10 @@ import { shallowMount, createLocalVue } from '@vue/test-utils';
 import VueRouter from 'vue-router';
 import Recipe from './Recipe.vue';
 import DataAccess from './DataAccess';
+import { routes, brewRoute } from './routing/routes';
 
 jest.mock('./DataAccess');
-const router = new VueRouter({ routes: [ { name: 'brew', path: '/brew/:id', props: true }]});
+const router = new VueRouter({ routes });
 
 describe('Recipe', () => {
   let wrapper;
@@ -35,7 +36,7 @@ describe('Recipe', () => {
 
   test('will navigate to brew page after starting a new brew day', async () => {
     await wrapper.vm.startNewBrewDay();
-    expect(wrapper.vm.$route.name).toEqual('brew');
+    expect(wrapper.vm.$route.name).toEqual(brewRoute.name);
     expect(wrapper.vm.$route.params.id).toBeDefined();
   });
 
@@ -44,4 +45,4 @@ describe('Recipe', () => {
     const result = wrapper.vm.$options.filters.formatBrewDate(value);
     expect(result).toEqual('2020-02-02');
   });
-})
+});
