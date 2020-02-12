@@ -57,10 +57,10 @@ export default class DataAccess {
 
   // returns { err }
   static async putBrew(brew) {
-    const response = await fetch(`brews/${this.brew._id}`, {
+    const response = await fetch(`brews/${brew._id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(this.brew)
+      body: JSON.stringify(brew)
     });
 
     if (!response.ok) {
