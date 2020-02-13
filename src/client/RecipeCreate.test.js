@@ -5,9 +5,9 @@ import DataAccess from './DataAccess';
 import { routes, recipeRoute } from './routing/routes';
 
 jest.mock('./DataAccess');
-const router = new VueRouter({ routes });
 
-describe('RecipeCreate', () => {
+describe('RecipeCreate', () => {  
+  const router = new VueRouter({ routes });
   let wrapper;
 
   beforeEach(() => {

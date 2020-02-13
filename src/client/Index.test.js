@@ -2,12 +2,12 @@ import { shallowMount, createLocalVue } from '@vue/test-utils';
 import VueRouter from 'vue-router';
 import Index from './Index.vue';
 import DataAccess from './DataAccess';
-import { routes, recipeRoute, recipeCreateRoute } from './routing/routes';
+import { routes } from './routing/routes';
 
 jest.mock('./DataAccess');
-const router = new VueRouter({ routes });
 
 describe('Index', () => {
+  const router = new VueRouter({ routes });
   let wrapper;
   const mockRecipes = [ { name: 'Mock Recipe'} ];
 

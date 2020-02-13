@@ -5,9 +5,9 @@ import DataAccess from './DataAccess';
 import { routes } from './routing/routes';
 
 jest.mock('./DataAccess');
-const router = new VueRouter({ routes });
 
 describe('Brew', () => {
+  const router = new VueRouter({ routes });
   let wrapper;
   let mockBrew;
 
