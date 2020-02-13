@@ -4,13 +4,15 @@
   "description": "Brew tracker",
   "scripts": {
     "start": "node server.js",
-    "dev": "BT_MONGO=mongodb://developer:changeit@localhost:27017/ BT_MONGO_DBNAME=brew-tracker node server.js",
+    "prod:build": "rm -rf public && webpack --mode=production",
     "test": "jest",
-    "build-client": "webpack --watch"
+    "dev": "concurrently npm:dev:server npm:dev:client",
+    "dev:server": "BT_MONGO=mongodb://developer:changeit@localhost:27017/ BT_MONGO_DBNAME=brew-tracker nodemon --ignore client/ --ignore public/ server.js",
+    "dev:client": "webpack --mode=development --watch"
   },
   "author": "Adam Fournier",
   "license": "ISC",
-  "browserslist": ">5%, not dead",
+  "browserslist": ">2%, not dead",
   "jest": {
     "moduleFileExtensions": [
       "js",
@@ -32,10 +34,12 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^25.1.0",
     "babel-loader": "^8.0.6",
+    "concurrently": "^5.1.0",
     "css-loader": "^3.4.2",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^25.1.0",
     "moment": "^2.24.0",
+    "nodemon": "^2.0.2",
     "uuid": "^3.4.0",
     "vue": "^2.6.11",
     "vue-jest": "^3.0.5",
@@ -43,6 +47,6 @@
     "vue-router": "^3.1.5",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.41.6",
-    "webpack-cli": "^4.0.0-beta.2"
+    "webpack-cli": "^3.3.11"
   }
 }

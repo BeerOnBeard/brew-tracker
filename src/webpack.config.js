@@ -3,10 +3,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
   entry: './client/index.js',
   output: {
-    filename: 'index.js',
+    filename: 'index.[contenthash].js',
     path: path.join(__dirname, 'public')
   },
   module: {
