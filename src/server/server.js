@@ -25,7 +25,8 @@ client.connect((err, client) => {
   const dataAccess = new DataAccess(db);
   const app = createExpressApplication(dataAccess);
 
-  app.listen(port, () => console.log(`Listening on port ${port}...`));
+  const server = app.listen(port, () => console.log(`Listening on port ${port}...`));
+  registerShutdownHandlers(server);
 });
 
 function createExpressApplication(dataAccess) {
@@ -87,4 +88,30 @@ function createExpressApplication(dataAccess) {
   });
 
   return app;
+}
+
+// expects an http.Server
+function registerShutdownHandlers(server) {
+  const exit = () => {
+    server.close(err => {
+      if (err) {
+        console.error(err);
+        process.exitCode = 1;
+      }
+
+      process.exit();
+    });
+  }
+
+  // SIGINT from CTRL+C
+  process.on('SIGINT', () => {
+    console.log('Received SIGNINT. Shutting down.');
+    exit();
+  });
+
+  // SIGTERM from docker stop
+  process.on('SIGTERM', () => {
+    console.log('Received SIGTERM. Shutting down.');
+    exit();
+  });
 }

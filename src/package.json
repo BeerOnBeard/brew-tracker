@@ -3,11 +3,10 @@
   "version": "0.0.1",
   "description": "Brew tracker",
   "scripts": {
-    "start": "node server.js",
-    "prod:build": "rm -rf public && webpack --mode=production",
     "test": "jest",
+    "prod:build": "webpack --mode=production",
     "dev": "concurrently npm:dev:server npm:dev:client",
-    "dev:server": "BT_MONGO=mongodb://developer:changeit@localhost:27017/ BT_MONGO_DBNAME=brew-tracker nodemon --ignore client/ --ignore public/ server.js",
+    "dev:server": "BT_MONGO=mongodb://developer:changeit@localhost:27017/ BT_MONGO_DBNAME=brew-tracker nodemon --ignore client/ --ignore public/ server/server.js",
     "dev:client": "webpack --mode=development --watch"
   },
   "author": "Adam Fournier",
