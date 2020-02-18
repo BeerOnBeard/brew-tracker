@@ -1,8 +1,9 @@
 const port = 3000;
+const documentOutOfDateCode = 'DOCUMENT_OUT_OF_DATE';
 
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
-const DataAccess = require('./MongoDataAccess');
+const mongoDataAccess = require('./mongoDataAccess');
 
 const mongoConnectionString = process.env.BT_MONGO;
 const mongoDatabaseName = process.env.BT_MONGO_DBNAME;
@@ -22,7 +23,7 @@ client.connect((err, client) => {
   }
 
   let db = client.db(mongoDatabaseName);
-  const dataAccess = new DataAccess(db);
+  const dataAccess = mongoDataAccess(db);
   const app = createExpressApplication(dataAccess);
 
   const server = app.listen(port, () => console.log(`Listening on port ${port}...`));
@@ -56,9 +57,19 @@ function createExpressApplication(dataAccess) {
       return;
     }
 
-    await dataAccess.putRecipe(recipe);
-    res.status(201).end();
-  })
+    const response = await dataAccess.putRecipe(recipe);
+    if (response.err && response.err === dataAccess.documentOutOfDateError) {
+      res.statusMessage = documentOutOfDateCode;
+      res.status(400).json(response.recipe);
+      return;
+    } else if (response.err) {
+      console.err(response);
+      res.status(500).end();
+      return;
+    }
+
+    res.status(201).json(response.recipe);
+  });
 
   // expecting /brews?recipeId={GUID}
   app.get('/brews', async (req, res) => {
@@ -83,8 +94,18 @@ function createExpressApplication(dataAccess) {
       return;
     }
 
-    await dataAccess.putBrew(brew);
-    res.status(201).end();
+    const response = await dataAccess.putBrew(brew);
+    if (response.err && response.err === dataAccess.documentOutOfDateError) {
+      res.statusMessage = documentOutOfDateCode;
+      res.status(400).json(response.brew);
+      return;
+    } else if (response.err) {
+      console.err(response);
+      res.status(500).end();
+      return;
+    }
+
+    res.status(201).json(response.brew);
   });
 
   return app;

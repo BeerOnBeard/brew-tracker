@@ -31,7 +31,7 @@ export default class DataAccess {
     });
 
     if (!response.ok) {
-      return { response };
+      return { err: response };
     }
 
     return {};
@@ -66,7 +66,7 @@ export default class DataAccess {
     return { brew: json };
   }
 
-  // returns { err }
+  // returns { err, brew }
   static async putBrew(brew) {
     const response = await fetch(`brews/${brew._id}`, {
       method: 'PUT',
@@ -74,10 +74,18 @@ export default class DataAccess {
       body: JSON.stringify(brew)
     });
 
+    const json = await response.json();
+    if (!json.notes) {
+      // if notes are undefined and then instantiated later,
+      // the computed property will not update correctly. If
+      // we instantiate the collection now, we're all good.
+      json.notes = [];
+    }
+    
     if (!response.ok) {
-      return { err: response };
+      return { err: response, brew: json };
     }
 
-    return {};
+    return { brew: json };
   }
 }

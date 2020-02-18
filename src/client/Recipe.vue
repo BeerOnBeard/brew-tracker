@@ -58,6 +58,7 @@ export default {
       const brewId = getGuid();
       const response = await DataAccess.putBrew({
         _id: brewId,
+        _version: 0,
         recipe: this.recipe,
         dateStarted: moment().format()
       });

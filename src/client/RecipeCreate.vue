@@ -111,6 +111,7 @@ export default {
   data() {
     return {
       _id: getGuid(),
+      _version: 0,
       name: '',
       yeast: '',
       targetOriginalGravity: 1.047,

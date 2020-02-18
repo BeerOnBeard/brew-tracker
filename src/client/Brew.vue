@@ -94,12 +94,17 @@ export default {
     async addNote() {
       this.brew.notes.push({ time: moment().format(), type: this.note.type, text: this.note.text });
       const response = await DataAccess.putBrew(this.brew);
-      if (response.err) {
+      if (response.err && response.err.statusText === 'DOCUMENT_OUT_OF_DATE') {
+        this.brew = response.brew;
+        await this.addNote();
+        return;
+      } else if (response.err) {
         alert('No dice. Check the console.');
         console.error(response.err);
         return;
       }
       
+      this.brew = response.brew;
       this.note.text = '';
     }
   }
