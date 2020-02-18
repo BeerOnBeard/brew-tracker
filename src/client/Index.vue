@@ -11,7 +11,7 @@
 </template>
 <script>
 import { recipeRoute, recipeCreateRoute } from './routing/routes';
-import DataAccess from './DataAccess';
+import { getRecipes } from './dataAccess';
 
 export default {
   name: 'Index',
@@ -22,7 +22,7 @@ export default {
     }
   },
   async created() {
-    const response = await DataAccess.getRecipes();
+    const response = await getRecipes();
     if (response.err) {
       alert('No dice. Check the console.');
       console.error(response.err);

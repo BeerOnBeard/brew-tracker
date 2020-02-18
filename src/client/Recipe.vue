@@ -16,7 +16,7 @@
 </template>
 <script>
 import RecipeView from './components/RecipeView.vue';
-import DataAccess from './DataAccess';
+import { getRecipe, getBrews, putBrew } from './dataAccess';
 import moment from 'moment';
 import getGuid from 'uuid/v4';
 import { indexRoute, brewRoute } from './routing/routes';
@@ -32,7 +32,7 @@ export default {
     };
   },
   async created() {
-    const recipeResponse = await DataAccess.getRecipe(this.id);
+    const recipeResponse = await getRecipe(this.id);
     if (recipeResponse.err) {
       alert('No dice. Check the console.');
       console.error(recipeResponse.err)
@@ -41,7 +41,7 @@ export default {
 
     this.recipe = recipeResponse.recipe;
 
-    const brewsResponse = await DataAccess.getBrews(this.id);
+    const brewsResponse = await getBrews(this.id);
     if (brewsResponse.err) {
       alert('No dice. Check the console.');
       console.error(brewsResponse.err)
@@ -56,7 +56,7 @@ export default {
   methods: {
     async startNewBrewDay() {
       const brewId = getGuid();
-      const response = await DataAccess.putBrew({
+      const response = await putBrew({
         _id: brewId,
         _version: 0,
         recipe: this.recipe,

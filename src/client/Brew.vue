@@ -39,7 +39,7 @@
 <script>
 import RecipeView from './components/RecipeView.vue';
 import moment from 'moment';
-import DataAccess from './DataAccess';
+import { getBrew, putBrew } from './dataAccess';
 import { indexRoute } from './routing/routes';
 
 export default {
@@ -55,7 +55,7 @@ export default {
     };
   },
   async created() {
-    let response = await DataAccess.getBrew(this.id);
+    let response = await getBrew(this.id);
     if (response.err) {
       alert('No dice. Check the console.');
       console.error(response.err);
@@ -93,7 +93,7 @@ export default {
   methods: {
     async addNote() {
       this.brew.notes.push({ time: moment().format(), type: this.note.type, text: this.note.text });
-      const response = await DataAccess.putBrew(this.brew);
+      const response = await putBrew(this.brew);
       if (response.err && response.err.statusText === 'DOCUMENT_OUT_OF_DATE') {
         this.brew = response.brew;
         await this.addNote();

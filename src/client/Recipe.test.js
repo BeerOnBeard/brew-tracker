@@ -1,10 +1,11 @@
+jest.mock('./dataAccess');
+
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import VueRouter from 'vue-router';
 import Recipe from './Recipe.vue';
-import DataAccess from './DataAccess';
+import { getRecipe, getBrews, putBrew } from './dataAccess';
 import { routes, brewRoute } from './routing/routes';
 
-jest.mock('./DataAccess');
 
 describe('Recipe', () => {
   const router = new VueRouter({ routes });
@@ -16,10 +17,12 @@ describe('Recipe', () => {
     const localVue = createLocalVue();
     localVue.use(VueRouter);
 
-    DataAccess.mockClear();
-    DataAccess.getRecipe.mockResolvedValue({ recipe: mockRecipe });
-    DataAccess.getBrews.mockResolvedValue({ brews: mockBrews });
-    DataAccess.putBrew.mockResolvedValue({});
+    getRecipe.mockClear();
+    getBrews.mockClear();
+    putBrew.mockClear();
+    getRecipe.mockResolvedValue({ recipe: mockRecipe });
+    getBrews.mockResolvedValue({ brews: mockBrews });
+    putBrew.mockResolvedValue({});
     wrapper = shallowMount(Recipe, { localVue, router });
   });
 
@@ -31,7 +34,7 @@ describe('Recipe', () => {
 
   test('will create a new brew when starting a new brew day', async () => {
     await wrapper.vm.startNewBrewDay();
-    expect(DataAccess.putBrew).toHaveBeenCalled();
+    expect(putBrew).toHaveBeenCalled();
   })
 
   test('will navigate to brew page after starting a new brew day', async () => {
