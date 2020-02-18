@@ -103,7 +103,7 @@
 </style>
 <script>
 import getGuid from 'uuid/v4';
-import DataAccess from './DataAccess';
+import { putRecipe } from './dataAccess';
 import { recipeRoute } from './routing/routes';
 
 export default {
@@ -111,6 +111,7 @@ export default {
   data() {
     return {
       _id: getGuid(),
+      _version: 0,
       name: '',
       yeast: '',
       targetOriginalGravity: 1.047,
@@ -138,7 +139,7 @@ export default {
       this.hops.splice(index, 1);
     },
     async commit() {
-      const response = await DataAccess.putRecipe(this.$data);
+      const response = await putRecipe(this.$data);
       if (response.err) {
         alert('No dice. Check the console.');
         console.error(response.err);

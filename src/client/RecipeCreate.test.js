@@ -1,10 +1,10 @@
+jest.mock('./dataAccess');
+
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import VueRouter from 'vue-router';
 import RecipeCreate from './RecipeCreate.vue';
-import DataAccess from './DataAccess';
+import { putRecipe } from './dataAccess';
 import { routes, recipeRoute } from './routing/routes';
-
-jest.mock('./DataAccess');
 
 describe('RecipeCreate', () => {  
   const router = new VueRouter({ routes });
@@ -14,7 +14,7 @@ describe('RecipeCreate', () => {
     const localVue = createLocalVue();
     localVue.use(VueRouter);
 
-    DataAccess.mockClear();
+    putRecipe.mockClear();
     wrapper = shallowMount(RecipeCreate, { localVue, router });
   })
 
@@ -39,7 +39,7 @@ describe('RecipeCreate', () => {
   });
 
   test('will navigate to the recipe on successful commit', async () => {
-    DataAccess.putRecipe.mockResolvedValue({});
+    putRecipe.mockResolvedValue({});
     const expectedId = 'expected';
     wrapper.vm.$data._id = expectedId;
     await wrapper.vm.commit();

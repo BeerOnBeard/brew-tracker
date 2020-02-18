@@ -1,10 +1,10 @@
+jest.mock('./dataAccess');
+
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import VueRouter from 'vue-router';
 import Brew from './Brew.vue';
-import DataAccess from './DataAccess';
+import { getBrew, putBrew } from './dataAccess'
 import { routes } from './routing/routes';
-
-jest.mock('./DataAccess');
 
 describe('Brew', () => {
   const router = new VueRouter({ routes });
@@ -22,8 +22,9 @@ describe('Brew', () => {
     const localVue = createLocalVue();
     localVue.use(VueRouter);
 
-    DataAccess.mockClear();
-    DataAccess.getBrew.mockResolvedValue({ brew: mockBrew });
+    getBrew.mockClear();
+    putBrew.mockClear();
+    getBrew.mockResolvedValue({ brew: mockBrew });
     wrapper = shallowMount(Brew, { localVue, router });
   });
 
@@ -69,20 +70,48 @@ describe('Brew', () => {
   });
 
   test('will add a new note correctly', async () => {
-    DataAccess.putBrew.mockResolvedValue({});
-    
+    putBrew.mockImplementation(async brew => { return await Promise.resolve({ brew }); });
+
     const expectedType = 'expected type';
     const expectedText = 'expected text';
     wrapper.vm.note.type = expectedType;
     wrapper.vm.note.text = expectedText;
-
+    
     await wrapper.vm.addNote();
 
     expect(wrapper.vm.brew.notes[0])
       .toEqual({ type: expectedType, text: expectedText, time: expect.any(String) });
 
-    expect(DataAccess.getBrew).toHaveBeenCalled();
+    expect(putBrew).toHaveBeenCalled();
     expect(wrapper.vm.note.type).toEqual(expectedType);
     expect(wrapper.vm.note.text).toEqual('');
+  });
+
+  test('will retry if the document is out of date', async () => {
+    const expectedType = 'expected type';
+    const expectedText = 'expected text';
+    wrapper.vm.note.type = expectedType;
+    wrapper.vm.note.text = expectedText;
+    putBrew
+      .mockImplementationOnce(async () => {
+        return await Promise.resolve({
+          err: { statusText: 'DOCUMENT_OUT_OF_DATE' },
+          brew: {
+            recipe: {
+              name: 'Recipe Name'
+            },
+            notes: [] 
+          }
+        });
+      })
+      .mockImplementationOnce(async brew => {
+        return await Promise.resolve({ brew });
+      });
+
+      await wrapper.vm.addNote();
+
+      expect(putBrew).toHaveBeenCalledTimes(2);
+      expect(wrapper.vm.brew.notes[0])
+        .toEqual({ type: expectedType, text: expectedText, time: expect.any(String) });
   });
 });

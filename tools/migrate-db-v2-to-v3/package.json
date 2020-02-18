@@ -1,0 +1,19 @@
+{
+  "name": "migrate-db-v1-to-v2",
+  "version": "1.0.0",
+  "description": "Tool to migrate a brew-tracker database from v2 to v3 where versions are tracked to prevent undesired overwrites.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest",
+    "integration-test": "cd integration-test && ./test.sh"
+  },
+  "author": "Adam Fournier",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^25.1.0"
+  },
+  "dependencies": {
+    "mongo": "^0.1.0"
+  }
+}
