@@ -3,22 +3,47 @@
     <router-link :to="{ name: routes.indexRoute.name }">Back to List</router-link>
     <h1>{{ brew.recipe.name }}</h1>
     <div>Brew Started: {{ brew.dateStarted | formatBrewStartedDate }}</div>
-    <form class="note-form" @submit.prevent="addNote" v-on:keyup.ctrl.enter="addNote">
+    <form
+      class="note-form"
+      @submit.prevent="addNote"
+      v-on:keyup.ctrl.enter="addNote"
+    >
       <h2>Add Note</h2>
-      <label>
-        Type
-        <input type="text" v-model="note.type" list="note-type-list" />
-        <datalist id="note-type-list">
-          <option v-for="type in noteTypes" :value="type" :key="type"></option>
-        </datalist>
-      </label>
-      <textarea class="note-form__text" v-model="note.text"></textarea>
-      <button type="submit">Add</button>
+      <Field
+        label="Type"
+        type="text"
+        v-model="note.type"
+        list="note-type-list"
+      />
+      <datalist id="note-type-list">
+        <option
+          v-for="type in noteTypes"
+          :value="type"
+          :key="type"
+        ></option>
+      </datalist>
+      <TextAreaField v-model="note.text" />
+      <input
+        type="submit"
+        value="Add"
+      />
     </form>
+    <h2>Alcohol</h2>
+    <AlcoholCalculator
+      :originalBrix="brew.originalBrix"
+      :finalBrix="brew.finalBrix"
+      @save="saveBrix"
+    />
     <RecipeView :recipe="brew.recipe" />
-    <div v-for="(notes, type) in notesDictionary" :key="type">
+    <div
+      v-for="(notes, type) in notesDictionary"
+      :key="type"
+    >
       <h2>{{ type }}</h2>
-      <div v-for="note in notes" :key="note.time">
+      <div
+        v-for="note in notes"
+        :key="note.time"
+      >
         <h3>{{ note.moment.format('YYYY-MM-DD [@] HH:mm:ss') }}</h3>
         <div class="note__text">{{ note.text }}</div>
       </div>
@@ -38,6 +63,9 @@
 </style>
 <script>
 import RecipeView from './components/RecipeView.vue';
+import AlcoholCalculator from './components/AlcoholCalculator.vue';
+import Field from './components/Field.vue';
+import TextAreaField from './components/TextAreaField.vue';
 import moment from 'moment';
 import { getBrew, putBrew } from './dataAccess';
 import { indexRoute } from './routing/routes';
@@ -65,7 +93,10 @@ export default {
     this.brew = response.brew;
   },
   components: {
-    RecipeView
+    RecipeView,
+    AlcoholCalculator,
+    Field,
+    TextAreaField
   },
   filters: {
     formatBrewStartedDate(value)  {
@@ -93,19 +124,29 @@ export default {
   methods: {
     async addNote() {
       this.brew.notes.push({ time: moment().format(), type: this.note.type, text: this.note.text });
+      const response = await this.putBrewWithRetry(this.addNote);
+      if (!response?.err) {
+        this.note.text = '';
+      }
+    },
+    async saveBrix(payload) {
+      this.brew.originalBrix = payload.originalBrix;
+      this.brew.finalBrix = payload.finalBrix;
+      await this.putBrewWithRetry(this.saveBrix);
+    },
+    async putBrewWithRetry(retryFunction) {
       const response = await putBrew(this.brew);
       if (response.err && response.err.statusText === 'DOCUMENT_OUT_OF_DATE') {
         this.brew = response.brew;
-        await this.addNote();
+        await retryFunction();
         return;
       } else if (response.err) {
         alert('No dice. Check the console.');
         console.error(response.err);
-        return;
+        return { err: response };
       }
-      
+
       this.brew = response.brew;
-      this.note.text = '';
     }
   }
 }
