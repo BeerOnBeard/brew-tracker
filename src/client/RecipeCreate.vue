@@ -1,113 +1,164 @@
 <template>
-  <div>
-    <form @submit.prevent="commit" class="new-recipe">
-      <h1>New Recipe</h1>
-      <label>
-        Name <input type="text" v-model="name" />
-      </label>
-      <label>
-        Yeast <input type="text" v-model="yeast" />
-      </label>
-      <label>
-        Target original gravity <input type="number" step="0.001" v-model="targetOriginalGravity" />
-      </label>
-      <label>
-        Target final gravity <input type="number" step="0.001" v-model="targetFinalGravity" />
-      </label>
-      <label>
-        Fermentation temperature (&deg;F) <input type="number" step="0.1" v-model="fermentationTemperature" />
-      </label>
-      
-      <h2>Mash</h2>
-      <div class="fermentables">
-        <h3>Fermentables <span class="fermentables__add" @click="addFermentable">+</span></h3>
-        <input type="text" v-for="(_, i) in mash.fermentables" v-model="mash.fermentables[i]" :key="i" />
-      </div>
-      <label>
-        Starting volume (gallons) <input type="number" step="0.1" v-model="mash.startingVolume" />
-      </label>
-      <label>
-        Sparge volume (gallons) <input type="number" step="0.1" v-model="mash.spargeVolume" />
-      </label>
-      <label>
-        Target final volume (gallons) <input type="number" step="0.1" v-model="mash.targetFinalVolume" />
-      </label>
-      <label>
-        Mash temperature (&deg;F) <input type="number" v-model="mash.mashTemperature" />
-      </label>
-      <label>
-        Mash-out temperature (&deg;F) <input type="number" v-model="mash.mashOutTemperature" />
-      </label>
+  <form
+    @submit.prevent="commit"
+    class="new-recipe"
+  >
+    <h1>New Recipe</h1>
+    <Field
+      label="Name"
+      type="text"
+      v-model="name"
+    />
+    <Field
+      label="Yeast"
+      type="text"
+      v-model="yeast"
+    />
+    <Field
+      label="Target original gravity"
+      type="number"
+      step="0.001"
+      v-model.number="targetOriginalGravity"
+    />
+    <Field
+      label="Target final gravity"
+      type="number"
+      step="0.001"
+      v-model.number="targetFinalGravity"
+    />
+    <Field
+      label="Fermentation temperature (&deg;F)"
+      type="number"
+      step="0.1"
+      v-model.number="fermentationTemperature"
+    />
+    
+    <h2>Mash</h2>
+    <div class="fermentables">
+      <h3>
+        Fermentables
+        <span
+          class="fermentables__add"
+          @click="addFermentable"
+        >+</span>
+      </h3>
+      <input
+        type="text"
+        v-for="(_, i) in mash.fermentables"
+        v-model="mash.fermentables[i]"
+        :key="i"
+      />
+    </div>
+    <Field
+      label="Starting volume (gallons)"
+      type="number"
+      step="0.1"
+      v-model.number="mash.startingVolume"
+    />
+    <Field
+      label="Sparge volume (gallons)"
+      type="number"
+      step="0.1"
+      v-model.number="mash.spargeVolume"
+    />
+    <Field
+      label="Target final volume (gallons)"
+      type="number"
+      step="0.1"
+      v-model.number="mash.targetFinalVolume"
+    />
+    <Field
+      label="Mash temperature (&deg;F)"
+      type="number"
+      v-model.number="mash.mashTemperature"
+    />
+    <Field
+      label="Mash-out temperature (&deg;F)"
+      type="number"
+      v-model.number="mash.mashOutTemperature"
+    />
 
-      <div class="hops">
-        <h2>Hops <span class="hops__add" @click="addHop">+</span></h2>
-        <div class="hop" v-for="(_, i) in hops" :key="i">
-          <label>
-            Amount in Ounces
-            <input type="number" step="0.01" v-model="hops[i].amount" />
-          </label>
-          <label>
-            Name
-            <input type="text" v-model="hops[i].name" />
-          </label>
-          <label>
-            %AA
-            <input type="number" step="0.1" v-model="hops[i].alphaAcids" />
-          </label>
-          <label>
-            Time in Minutes
-            <input type="number" v-model="hops[i].time" />
-          </label>
-          <button class="hop__remove" @click="removeHop(i)">Remove</button>
-        </div>
+    <div class="hops">
+      <h2>
+        Hops
+        <span
+          class="hops__add"
+          @click="addHop"
+        >+</span>
+      </h2>
+      <div
+        class="hop"
+        v-for="(_, i) in hops"
+        :key="i"
+      >
+        <Field
+          label="Amount in Ounces"
+          type="number"
+          step="0.01"
+          v-model.number="hops[i].amount"
+        />
+        <Field
+          label="Name"
+          type="text"
+          v-model="hops[i].name"
+        />
+        <Field
+          label="%AA"
+          type="number"
+          step="0.1"
+          v-model.number="hops[i].alphaAcids"
+        />
+        <Field
+          label="Time in Minutes"
+          type="number"
+          v-model.number="hops[i].time"
+        />
+        <input
+          type="submit"
+          class="hop__remove"
+          @submit.prevent="removeHop(i)"
+          value="Remove"
+        />
       </div>
-      <button type="submit">Commit</button>
-    </form>
-  </div>
+    </div>
+    <input
+      type="submit"
+      value="Commit"
+    />
+  </form>
 </template>
 <style scoped>
-.new-recipe label {
-  display: block;
-  margin-bottom: 1rem;
-  margin-right: 0.5rem;
-}
-.new-recipe input {
-  line-height: 2rem;
-  display: block;
-}
-.new-recipe .fermentables {
-  margin-bottom: 1rem;
-}
-.new-recipe .fermentables__add{
+.fermentables__add, .hops__add{
   font-size: 1.5rem;
   color: green;
   cursor: pointer;
 }
-.new-recipe .hops__add {
-  color: green;
-  cursor: pointer;
+.fermentables input {
+  line-height: 2rem;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
 }
-.new-recipe .hop {
+.hop {
   border: 1px solid black;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
 }
-.new-recipe .hop__remove {
-  background: red;
-  color: white;
-  height: 2rem;
+.hop__remove {
+  color: red;
 }
 </style>
 <script>
 import getGuid from 'uuid/v4';
 import { putRecipe } from './dataAccess';
 import { recipeRoute } from './routing/routes';
+import Field from './components/Field.vue';
 
 export default {
   name: 'RecipeCreate',
+  components: {
+    Field
+  },
   data() {
     return {
       _id: getGuid(),
