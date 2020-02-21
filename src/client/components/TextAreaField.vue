@@ -1,7 +1,6 @@
 <template>
   <textarea
     class="text-area-field"
-    v-bind="$attrs"
     :value="value"
     @input="$emit('input', $event.target.value)"
   ></textarea>
@@ -17,7 +16,6 @@
 <script>
 export default {
   name: 'Field',
-  inheritAttrs: false,
   props: {
     value: [String, Number]
   }
