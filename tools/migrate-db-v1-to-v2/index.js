@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const moment = require('moment');
-const getGuid = require('uuid/v4');
+const { v4: getGuid } = require('uuid');
 const convert = require('./convert');
 
 const v1MongoConnectionString = process.env.BT_V1_MONGO;

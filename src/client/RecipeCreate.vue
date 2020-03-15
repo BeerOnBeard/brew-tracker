@@ -149,7 +149,7 @@
 }
 </style>
 <script>
-import getGuid from 'uuid/v4';
+import { v4 as getGuid } from 'uuid';
 import { putRecipe } from './dataAccess';
 import { recipeRoute } from './routing/routes';
 import Field from './components/Field.vue';

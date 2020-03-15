@@ -18,7 +18,7 @@
 import RecipeView from './components/RecipeView.vue';
 import { getRecipe, getBrews, putBrew } from './dataAccess';
 import moment from 'moment';
-import getGuid from 'uuid/v4';
+import { v4 as getGuid}  from 'uuid';
 import { indexRoute, brewRoute } from './routing/routes';
 
 export default {
