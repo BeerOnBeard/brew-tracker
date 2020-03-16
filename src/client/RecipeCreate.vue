@@ -8,11 +8,13 @@
       label="Name"
       type="text"
       v-model="name"
+      data-testid="new-recipe__name"
     />
     <Field
       label="Yeast"
       type="text"
       v-model="yeast"
+      data-testid="new-recipe__yeast"
     />
     <Field
       label="Target original gravity"
@@ -34,12 +36,16 @@
     />
     
     <h2>Mash</h2>
-    <div class="fermentables">
+    <div
+      class="fermentables"
+      data-testid="new-recipe__fermentables-container"
+    >
       <h3>
         Fermentables
         <span
           class="fermentables__add"
           @click="addFermentable"
+          data-testid="new-recipe__add-fermentable"
         >+</span>
       </h3>
       <input
@@ -78,12 +84,16 @@
       v-model.number="mash.mashOutTemperature"
     />
 
-    <div class="hops">
+    <div
+      class="hops"
+      data-testid="new-recipe__hops-container"
+    >
       <h2>
         Hops
         <span
           class="hops__add"
           @click="addHop"
+          data-testid="new-recipe__add-hop"
         >+</span>
       </h2>
       <div
@@ -96,22 +106,26 @@
           type="number"
           step="0.01"
           v-model.number="hops[i].amount"
+          data-testid="new-recipe__hop-amount"
         />
         <Field
           label="Name"
           type="text"
           v-model="hops[i].name"
+          data-testid="new-recipe__hop-name"
         />
         <Field
           label="%AA"
           type="number"
           step="0.1"
           v-model.number="hops[i].alphaAcids"
+          data-testid="new-recipe__hop-alpha-acids"
         />
         <Field
           label="Time in Minutes"
           type="number"
           v-model.number="hops[i].time"
+          data-testid="new-recipe__hop-time"
         />
         <input
           type="submit"
@@ -124,6 +138,7 @@
     <input
       type="submit"
       value="Commit"
+      data-testid="new-recipe__commit"
     />
   </form>
 </template>

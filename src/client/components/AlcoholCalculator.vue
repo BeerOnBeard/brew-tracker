@@ -5,12 +5,14 @@
       type="number"
       step="0.01"
       v-model.number="localOriginalBrix"
+      data-testid="alcohol-calculator__original-brix"
     />
     <Field
       label="Final Brix"
       type="number"
       step="0.01"
       v-model.number="localFinalBrix"
+      data-testid="alcohol-calculator__final-brix"
     />
     <Field
       label="ABV"
@@ -21,6 +23,7 @@
     <input
       type="submit"
       value="Save"
+      data-testid="alcohol-calculator__save"
     />
   </form>
 </template>

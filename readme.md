@@ -20,6 +20,18 @@ npm run dev;
 
 Docker Compose will create a MongoDB database instance and spin up a Mongo Express instance to provide easy access to the data. Then run the NodeJS server configured to point to the MongoDB database.
 
+## Integration Tests
+
+Integration tests are written using Cypress. They are able to be run using Docker Compose or interactively for development.
+
+For information on running interactively, go to the [Integration Tests Readme](e2e-tests/readme.md).
+
+### Docker Compose
+
+```bash
+docker compose -f dc-e2e.yml up
+```
+
 ## Upgrades
 
 - [Migrate v0 Database to v1](tools/migrate-db-v0-to-v1/readme.md)

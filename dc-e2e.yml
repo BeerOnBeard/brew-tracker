@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+
+  mongo:
+    image: mongo:4
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: developer
+      MONGO_INITDB_ROOT_PASSWORD: changeit
+
+  brew-tracker:
+    build:
+      context: ./src
+    environment:
+      BT_MONGO: mongodb://developer:changeit@mongo:27017/
+      BT_MONGO_DBNAME: brew-tracker
+    depends_on:
+      - mongo
+  
+  e2e-tests:
+    build:
+      context: ./e2e-tests
+    environment:
+      CYPRESS_BASE_URI: http://brew-tracker:3000/
+      CYPRESS_VIDEO: "false"
+    depends_on:
+      - brew-tracker

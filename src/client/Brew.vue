@@ -14,6 +14,7 @@
         type="text"
         v-model="note.type"
         list="note-type-list"
+        data-testid="brew__note-type"
       />
       <datalist id="note-type-list">
         <option
@@ -22,10 +23,13 @@
           :key="type"
         ></option>
       </datalist>
-      <TextAreaField v-model="note.text" />
+      <TextAreaField
+        v-model="note.text"
+        data-testid="brew__note-text" />
       <input
         type="submit"
         value="Add"
+        data-testid="brew__add-note"
       />
     </form>
     <h2>Alcohol</h2>
@@ -38,6 +42,7 @@
     <div
       v-for="(notes, type) in notesDictionary"
       :key="type"
+      data-testid="brew__notes-container"
     >
       <h2>{{ type }}</h2>
       <div

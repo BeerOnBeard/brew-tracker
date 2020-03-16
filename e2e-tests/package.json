@@ -1,0 +1,13 @@
+{
+  "name": "e2e-tests",
+  "version": "1.0.0",
+  "description": "End to end tests for the Brew Tracker site",
+  "scripts": {
+    "cypress": "cypress open"
+  },
+  "author": "Adam Fournier",
+  "license": "ISC",
+  "dependencies": {
+    "cypress": "^4.1.0"
+  }
+}

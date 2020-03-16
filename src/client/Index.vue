@@ -1,6 +1,6 @@
 <template>
   <div v-if="recipes">
-    <router-link :to="{ name: routes.recipeCreateRoute.name }">New Recipe</router-link>
+    <router-link :to="{ name: routes.recipeCreateRoute.name }" data-testid="index__new-recipe-link">New Recipe</router-link>
     <h1>Recipes</h1>
     <ul>
       <li v-for="recipe in recipes" :key="recipe._id">

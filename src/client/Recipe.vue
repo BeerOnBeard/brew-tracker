@@ -1,8 +1,11 @@
 <template>
   <div v-if="recipe">
     <router-link :to="{ name: routes.indexRoute.name }">Back to List</router-link>
-    <button @click="startNewBrewDay">Start New Brew Day</button>
-    <h1>{{ recipe.name }}</h1>
+    <button
+      @click="startNewBrewDay"
+      data-testid="recipe__start-new-brew-day"
+    >Start New Brew Day</button>
+    <h1 data-testid="recipe__name">{{ recipe.name }}</h1>
     <RecipeView :recipe="recipe" />
     <div v-if="brews">
       <h2>Brews</h2>

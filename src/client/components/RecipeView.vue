@@ -1,13 +1,17 @@
 <template>
   <div>
     <h2>Recipe</h2>
-    <div>Yeast: {{ recipe.yeast }}</div>
+    <div data-testid="recipe-view__yeast">Yeast: {{ recipe.yeast }}</div>
     <div>Target original gravity: {{ recipe.targetOriginalGravity }}</div>
     <div>Target final gravity: {{ recipe.targetFinalGravity }}</div>
     <div>Fermentation temperature: {{ recipe.fermentationTemperature }}&deg;F</div>
     <div>
       <h3>Mash</h3>
-      <div v-for="fermentable in recipe.mash.fermentables" :key="fermentable">{{ fermentable }}</div>
+      <div
+        v-for="fermentable in recipe.mash.fermentables"
+        :key="fermentable"
+        data-testid="recipe-view__fermentable"
+      >{{ fermentable }}</div>
       <br />
       <div>Starting volume: {{ recipe.mash.startingVolume }} gallons</div>
       <div>Sparge volume: {{ recipe.mash.spargeVolume }} gallons</div>
@@ -27,7 +31,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="hop in recipe.hops" :key="hop.amount + hop.name + hop.alphaAcids + hop.time">
+          <tr 
+            v-for="hop in recipe.hops"
+            :key="hop.amount + hop.name + hop.alphaAcids + hop.time"
+            data-testid="recipe-view__hop"
+          >
             <td>{{ hop.amount }}oz</td>
             <td>{{ hop.name }}</td>
             <td>{{ hop.alphaAcids }}</td>
