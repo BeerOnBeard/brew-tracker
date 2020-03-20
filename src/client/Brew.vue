@@ -38,7 +38,10 @@
       :finalBrix="brew.finalBrix"
       @save="saveBrix"
     />
-    <RecipeView :recipe="brew.recipe" />
+    <RecipeView
+      :recipe="brew.recipe"
+      :headerStartingLevel="2"
+    />
     <div
       v-for="(notes, type) in notesDictionary"
       :key="type"

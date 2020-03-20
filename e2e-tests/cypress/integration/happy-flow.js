@@ -29,18 +29,18 @@ const baseUri = Cypress.env('BASE_URI') || 'http://localhost:3000/',
  * Fills in fields and submits the form.
  */
 function createRecipe() {
-  getTestElement('new-recipe__name')
+  getTestElement('recipe-edit__name')
     .type(recipeName);
     
-  getTestElement('new-recipe__yeast')
+  getTestElement('recipe-edit__yeast')
     .type(recipeYeast);
   
   // add two fermentables
-  getTestElement('new-recipe__add-fermentable')
+  getTestElement('recipe-edit__add-fermentable')
     .click()
     .click();
   
-  getTestElement('new-recipe__fermentables-container')
+  getTestElement('recipe-edit__fermentables-container')
     .within(() => {
       cy.get('input:first')
         .type(recipeFermentableOne);
@@ -49,45 +49,45 @@ function createRecipe() {
     });
   
   // add two hops
-  getTestElement('new-recipe__add-hop')
+  getTestElement('recipe-edit__add-hop')
     .click()
     .click();
 
-  getTestElement('new-recipe__hops-container')
+  getTestElement('recipe-edit__hops-container')
     .within(() => {
       
       cy.get('div.hop:first')
         .within(() => {
-          getTestElement('new-recipe__hop-amount')
+          getTestElement('recipe-edit__hop-amount')
             .type(recipeHopOne.amount);
           
-          getTestElement('new-recipe__hop-name')
+          getTestElement('recipe-edit__hop-name')
             .type(recipeHopOne.name);
 
-          getTestElement('new-recipe__hop-alpha-acids')
+          getTestElement('recipe-edit__hop-alpha-acids')
             .type(recipeHopOne.alphaAcids);
           
-          getTestElement('new-recipe__hop-time')
+          getTestElement('recipe-edit__hop-time')
             .type(recipeHopOne.time);
         });
 
       cy.get('div.hop:last')
         .within(() => {
-          getTestElement('new-recipe__hop-amount')
+          getTestElement('recipe-edit__hop-amount')
             .type(recipeHopTwo.amount);
           
-          getTestElement('new-recipe__hop-name')
+          getTestElement('recipe-edit__hop-name')
             .type(recipeHopTwo.name);
           
-          getTestElement('new-recipe__hop-alpha-acids')
+          getTestElement('recipe-edit__hop-alpha-acids')
             .type(recipeHopTwo.alphaAcids);
 
-          getTestElement('new-recipe__hop-time')
+          getTestElement('recipe-edit__hop-time')
             .type(recipeHopTwo.time);
         });
     });
 
-  getTestElement('new-recipe__commit')
+  getTestElement('recipe-edit__commit')
     .click();
 }
 

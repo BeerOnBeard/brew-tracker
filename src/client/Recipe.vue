@@ -6,7 +6,10 @@
       data-testid="recipe__start-new-brew-day"
     >Start New Brew Day</button>
     <h1 data-testid="recipe__name">{{ recipe.name }}</h1>
-    <RecipeView :recipe="recipe" />
+    <RecipeView
+      :recipe="recipe"
+      :headerStartingLevel="2"  
+    />
     <div v-if="brews">
       <h2>Brews</h2>
       <ul>
