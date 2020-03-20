@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h2>Recipe</h2>
+    <SectionHeader :level="headerStartingLevel">Recipe</SectionHeader>
     <div data-testid="recipe-view__yeast">Yeast: {{ recipe.yeast }}</div>
     <div>Target original gravity: {{ recipe.targetOriginalGravity }}</div>
     <div>Target final gravity: {{ recipe.targetFinalGravity }}</div>
     <div>Fermentation temperature: {{ recipe.fermentationTemperature }}&deg;F</div>
     <div>
-      <h3>Mash</h3>
+      <SectionHeader :level="headerStartingLevel + 1">Mash</SectionHeader>
       <div
         v-for="fermentable in recipe.mash.fermentables"
         :key="fermentable"
@@ -20,7 +20,7 @@
       <div>Mash-out temperature: {{ recipe.mash.mashOutTemperature }}&deg;F</div>
     </div>
     <div>
-      <h3>Hops</h3>
+      <SectionHeader :level="headerStartingLevel + 1">Hops</SectionHeader>
       <table class="recipe-hops-table">
         <thead>
           <tr>
@@ -59,10 +59,19 @@
 }
 </style>
 <script>
+import SectionHeader from './SectionHeader.vue';
+
 export default {
   name: 'RecipeView',
+  components: {
+    SectionHeader
+  },
   props: {
-    recipe: Object
+    recipe: Object,
+    headerStartingLevel: {
+      type: Number,
+      required: true
+    }
   }
 }
 </script>
