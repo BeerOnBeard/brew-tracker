@@ -4,7 +4,6 @@
     <h1>{{ brew.recipe.name }}</h1>
     <div>Brew Started: {{ brew.dateStarted | formatBrewStartedDate }}</div>
     <form
-      class="note-form"
       @submit.prevent="addNote"
       v-on:keyup.ctrl.enter="addNote"
     >
@@ -32,35 +31,52 @@
         data-testid="brew__add-note"
       />
     </form>
+    <hr />
     <h2>Alcohol</h2>
     <AlcoholCalculator
       :originalBrix="brew.originalBrix"
       :finalBrix="brew.finalBrix"
       @save="saveBrix"
     />
-    <RecipeView
-      :recipe="brew.recipe"
-      :headerStartingLevel="2"
-    />
+    <hr />
+    <div v-if="!editingRecipe">
+      <RecipeView
+        :recipe="brew.recipe"
+        :headerStartingLevel="2"
+      />
+      <button
+        @click="editingRecipe = true"
+        class="edit-recipe"
+      >Edit</button>
+    </div>
+    <div v-if="editingRecipe">
+      <RecipeEdit
+        :recipe="brew.recipe"
+        :headerStartingLevel="2"
+        @committed="updateRecipe"
+      />
+    </div>
+    <hr />
+    <h2>Notes</h2>
     <div
       v-for="(notes, type) in notesDictionary"
       :key="type"
       data-testid="brew__notes-container"
     >
-      <h2>{{ type }}</h2>
+      <h3>{{ type }}</h3>
       <div
         v-for="note in notes"
         :key="note.time"
       >
-        <h3>{{ note.moment.format('YYYY-MM-DD [@] HH:mm:ss') }}</h3>
+        <h4>{{ note.moment.format('YYYY-MM-DD [@] HH:mm:ss') }}</h4>
         <div class="note__text">{{ note.text }}</div>
       </div>
     </div>
   </div>
 </template>
 <style scoped>
-.note-form {
-  margin-bottom: 2rem;
+.edit-recipe {
+  margin-top: 2rem;
 }
 .note-form__text {
   width: 100%;
@@ -71,11 +87,13 @@
 </style>
 <script>
 import RecipeView from './components/RecipeView.vue';
+import RecipeEdit from './components/RecipeEdit.vue';
 import AlcoholCalculator from './components/AlcoholCalculator.vue';
 import Field from './components/Field.vue';
 import TextAreaField from './components/TextAreaField.vue';
 import moment from 'moment';
 import { getBrew, putBrew } from './dataAccess';
+import optimisticallyRetry from './util/optimisticallyRetry';
 import { indexRoute } from './routing/routes';
 
 export default {
@@ -87,7 +105,8 @@ export default {
     return {
       note: { type: '', text: '' },
       brew: undefined,
-      routes: { indexRoute }
+      routes: { indexRoute },
+      editingRecipe: false
     };
   },
   async created() {
@@ -102,6 +121,7 @@ export default {
   },
   components: {
     RecipeView,
+    RecipeEdit,
     AlcoholCalculator,
     Field,
     TextAreaField
@@ -131,30 +151,45 @@ export default {
   },
   methods: {
     async addNote() {
-      this.brew.notes.push({ time: moment().format(), type: this.note.type, text: this.note.text });
-      const response = await this.putBrewWithRetry(this.addNote);
-      if (!response?.err) {
+      const note = { time: moment().format(), type: this.note.type, text: this.note.text };
+      const result = await this.put(brew => {
+        brew.notes.push(note);
+        return brew;
+      });
+
+      if (!result.err) {
         this.note.text = '';
       }
     },
     async saveBrix(payload) {
-      this.brew.originalBrix = payload.originalBrix;
-      this.brew.finalBrix = payload.finalBrix;
-      await this.putBrewWithRetry(this.saveBrix);
+      await this.put(brew => {
+        brew.originalBrix = payload.originalBrix;
+        brew.finalBrix = payload.finalBrix;
+        return brew;
+      });
     },
-    async putBrewWithRetry(retryFunction) {
-      const response = await putBrew(this.brew);
-      if (response.err && response.err.statusText === 'DOCUMENT_OUT_OF_DATE') {
-        this.brew = response.brew;
-        await retryFunction();
-        return;
-      } else if (response.err) {
+    async updateRecipe(recipe) {
+      await this.put(brew => {
+        brew.recipe = recipe;
+        return brew;
+      });
+    },
+    async put(updateFunction) {
+      const result = await optimisticallyRetry(
+        putBrew,
+        this.brew,
+        updateFunction,
+        'brew'
+      );
+
+      if (result.err) {
         alert('No dice. Check the console.');
-        console.error(response.err);
-        return { err: response };
+        console.error(result);
+        return { err: result };
       }
 
-      this.brew = response.brew;
+      this.brew = result.document;
+      return {};
     }
   }
 }

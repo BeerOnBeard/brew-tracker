@@ -28,11 +28,12 @@ async function putRecipe(recipe) {
     body: JSON.stringify(recipe)
   });
 
+  const json = await response.json();
   if (!response.ok) {
-    return { err: response };
+    return { err: response, recipe: json };
   }
 
-  return {};
+  return { recipe: json };
 };
 
 // returns { err, brews }

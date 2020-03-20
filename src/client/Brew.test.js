@@ -28,17 +28,17 @@ describe('Brew', () => {
     wrapper = shallowMount(Brew, { localVue, router });
   });
 
-  test('will get the brew when created', () => {
+  it('will get the brew when created', () => {
     expect(wrapper.vm.brew).toEqual(mockBrew);
   });
 
-  test('will format the title date correctly', () => {
+  it('will format the title date correctly', () => {
     const value = '2020-02-02T13:00:00Z';
     const result = wrapper.vm.$options.filters.formatBrewStartedDate(value);
     expect(result).toEqual('2020-02-02');
   });
 
-  test('will compute the notes dictionary correctly', () => {
+  it('will compute the notes dictionary correctly', () => {
     const typeOne = 'type one';
     const typeTwo = 'type two';
     const noteOne = { type: typeOne, text: 'text one', time: '2020-01-02' };
@@ -60,7 +60,7 @@ describe('Brew', () => {
       });
   });
 
-  test('will compute the note types correctly', () => {
+  it('will compute the note types correctly', () => {
     wrapper.vm.brew.notes.push({ type: 'one' });
     wrapper.vm.brew.notes.push({ type: 'one' });
     wrapper.vm.brew.notes.push({ type: 'two' });
@@ -69,8 +69,8 @@ describe('Brew', () => {
     expect(wrapper.vm.noteTypes).toEqual(expect.arrayContaining([ 'one', 'two', 'three' ]));
   });
 
-  test('will add a new note correctly', async () => {
-    putBrew.mockImplementation(async brew => { return await Promise.resolve({ brew }); });
+  it('will add a new note correctly', async () => {
+    putBrew.mockImplementation(brew => Promise.resolve({ brew }));
 
     const expectedType = 'expected type';
     const expectedText = 'expected text';
@@ -87,31 +87,25 @@ describe('Brew', () => {
     expect(wrapper.vm.note.text).toEqual('');
   });
 
-  test('will retry if the document is out of date', async () => {
-    const expectedType = 'expected type';
-    const expectedText = 'expected text';
-    wrapper.vm.note.type = expectedType;
-    wrapper.vm.note.text = expectedText;
-    putBrew
-      .mockImplementationOnce(async () => {
-        return await Promise.resolve({
-          err: { statusText: 'DOCUMENT_OUT_OF_DATE' },
-          brew: {
-            recipe: {
-              name: 'Recipe Name'
-            },
-            notes: [] 
-          }
-        });
-      })
-      .mockImplementationOnce(async brew => {
-        return await Promise.resolve({ brew });
-      });
+  it('will save brix correctly', async () => {
+    putBrew.mockImplementation(brew => Promise.resolve({ brew }));
 
-      await wrapper.vm.addNote();
+    const expectedOriginalBrix = 13;
+    const expectedFinalBrix = 6;
+    await wrapper.vm.saveBrix({ originalBrix: expectedOriginalBrix, finalBrix: expectedFinalBrix });
 
-      expect(putBrew).toHaveBeenCalledTimes(2);
-      expect(wrapper.vm.brew.notes[0])
-        .toEqual({ type: expectedType, text: expectedText, time: expect.any(String) });
+    expect(putBrew).toHaveBeenCalled();
+    expect(wrapper.vm.brew.originalBrix).toEqual(expectedOriginalBrix);
+    expect(wrapper.vm.brew.finalBrix).toEqual(expectedFinalBrix);
+  });
+
+  it('will update the recipe correctly', async () => {
+    putBrew.mockImplementation(brew => Promise.resolve({ brew }));
+
+    const expectedRecipe = { name: 'updated '};
+    await wrapper.vm.updateRecipe(expectedRecipe);
+
+    expect(putBrew).toHaveBeenCalled();
+    expect(wrapper.vm.brew.recipe).toEqual(expectedRecipe);
   });
 });

@@ -38,7 +38,7 @@ module.exports = function(db) {
         throw exception;
       }
 
-      const currentRecipe = await +this.getRecipe(id);
+      const currentRecipe = await this.getRecipe(id);
       return { recipe: currentRecipe };
     },
     async getBrews(recipeId) {
