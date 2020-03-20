@@ -39,8 +39,8 @@ describe('RecipeEdit', () => {
 
   it('emits correct event when commit is called', () => {
     const wrapper = getMountedComponent();
-    wrapper.vm.commit();
-    expect(wrapper.emitted().committed).toBeTruthy();
-    expect(wrapper.emitted().committed[0]).toEqual([ recipe ]);
+    wrapper.vm.save();
+    expect(wrapper.emitted().saved).toBeTruthy();
+    expect(wrapper.emitted().saved[0]).toEqual([ recipe ]);
   });
 });

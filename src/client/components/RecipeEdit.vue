@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="commit">
+  <form @submit.prevent="save">
     <Field
       label="Name"
       type="text"
@@ -130,8 +130,8 @@
     </div>
     <input
       type="submit"
-      value="Commit"
-      data-testid="recipe-edit__commit"
+      value="Save"
+      data-testid="recipe-edit__save"
     />
   </form>
 </template>
@@ -195,8 +195,8 @@ export default {
     removeHop(index) {
       this.hops.splice(index, 1);
     },
-    commit() {
-      this.$emit('committed', deepCopy(this.$data));
+    save() {
+      this.$emit('saved', deepCopy(this.$data));
     }
   }
 }

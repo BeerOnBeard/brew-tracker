@@ -53,7 +53,7 @@
       <RecipeEdit
         :recipe="brew.recipe"
         :headerStartingLevel="2"
-        @committed="updateRecipe"
+        @saved="updateRecipe"
       />
     </div>
     <hr />

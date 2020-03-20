@@ -53,12 +53,12 @@ describe('Recipe', () => {
 
   it('will update the local recipe when commit returns successfully', async () => {
     const updatedRecipe = { name: 'updated recipe' };
-    await wrapper.vm.commit(updatedRecipe);
+    await wrapper.vm.save(updatedRecipe);
     expect(wrapper.vm.recipe).toEqual(updatedRecipe);
   });
 
   it('will set editing to false when commit returns successfully', async () => {
-    await wrapper.vm.commit({ name: 'updated recipe' });
+    await wrapper.vm.save({ name: 'updated recipe' });
     expect(wrapper.vm.editing).toEqual(false);
   });
 });

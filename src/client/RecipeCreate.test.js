@@ -21,7 +21,7 @@ describe('RecipeCreate', () => {
   test('will navigate to the recipe on successful commit', async () => {
     putRecipe.mockResolvedValue({});
     const expectedId = 'mock recipe';
-    await wrapper.vm.commit({ _id: expectedId });
+    await wrapper.vm.save({ _id: expectedId });
     expect(wrapper.vm.$route.name).toEqual(recipeRoute.name);
     expect(wrapper.vm.$route.params.id).toEqual(expectedId);
   });

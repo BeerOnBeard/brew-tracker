@@ -87,7 +87,7 @@ function createRecipe() {
         });
     });
 
-  getTestElement('recipe-edit__commit')
+  getTestElement('recipe-edit__save')
     .click();
 }
 

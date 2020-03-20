@@ -4,7 +4,7 @@
     <RecipeEdit
       :recipe="recipe"
       :headerStartingLevel="2"
-      @committed="commit"
+      @saved="save"
     />
   </div>
 </template>
@@ -42,7 +42,7 @@ export default {
     };
   },
   methods: {
-    async commit(payload) {
+    async save(payload) {
       const response = await putRecipe(payload);
       if (response.err) {
         alert('No dice. Check the console.');

@@ -33,7 +33,7 @@
       <RecipeEdit
         :recipe="recipe"
         :headerStartingLevel="1"
-        @committed="commit"
+        @saved="save"
       />
     </div>
   </div>
@@ -103,7 +103,7 @@ export default {
 
       this.$router.push({ name: brewRoute.name, params: { id: brewId }});
     },
-    async commit(payload) {
+    async save(payload) {
       const response = await putRecipe(payload);
       if (response.err && response.err.statusText === 'DOCUMENT_OUT_OF_DATE') {
         alert('The recipe was changed while you were making changes. Sadly, you are going to have to make your changes again.');
