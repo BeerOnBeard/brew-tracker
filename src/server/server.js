@@ -76,6 +76,11 @@ function createExpressApplication(dataAccess) {
     let brews = await dataAccess.getBrews(req.query.recipeId);
     res.json(brews);
   });
+
+  app.get('/recent-brews', async (req, res) => {
+    let brews = await dataAccess.getRecentBrews();
+    res.json(brews);
+  });
   
   app.get('/brews/:id', async (req, res) => {
     let brew = await dataAccess.getBrew(req.params.id);

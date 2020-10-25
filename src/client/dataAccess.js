@@ -47,6 +47,17 @@ async function getBrews(recipeId) {
   return { brews: json };
 };
 
+// returns { err, brews }
+async function getRecentBrews() {
+  const response = await fetch('recent-brews');
+  if (!response.ok) {
+    return { err: response };
+  }
+
+  const json = await response.json();
+  return { brews: json };
+};
+
 // returns { err, brew }
 async function getBrew(id) {
   const response = await fetch(`brews/${id}`);
@@ -88,4 +99,4 @@ async function putBrew(brew) {
   return { brew: json };
 };
 
-export { getRecipes, getRecipe, putRecipe, getBrews, getBrew, putBrew };
+export { getRecipes, getRecipe, putRecipe, getBrews, getRecentBrews, getBrew, putBrew };

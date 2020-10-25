@@ -45,6 +45,11 @@ module.exports = function(db) {
       let result = await db.collection(brewsCollectionName).find({ "recipe._id" : recipeId }).toArray();
       return result;
     },
+    /** Return the 10 most recent brews */
+    async getRecentBrews() {
+      let result = await db.collection(brewsCollectionName).find({}).sort({ dateStarted: -1}).limit(10).toArray();
+      return result;
+    },
     async getBrew(id) {
       let result =  await db.collection(brewsCollectionName).findOne({ _id: id });
       return result;
